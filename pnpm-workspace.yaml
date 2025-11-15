@@ -1,0 +1,7 @@
+onlyBuiltDependencies:
+  - core-js-pure
+  - esbuild
+  - rclone.js
+  - sharp
+  - unrs-resolver
+  - workerd
