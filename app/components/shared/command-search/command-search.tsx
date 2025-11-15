@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { SearchableItem } from "@/lib/types";
 import {
   Command,
@@ -30,24 +30,6 @@ export function CommandSearch() {
     handleOpen,
     handleClose,
   } = useCommandSearch(items);
-
-  // ダイアログが開いたときにデータをfetch（初回のみ）
-  useEffect(() => {
-    if (open && items.length === 0 && !isLoading) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsLoading(true);
-      fetch("/notes-index.json")
-        .then((res): Promise<SearchableItem[]> => res.json())
-        .then((data: SearchableItem[]) => {
-          setItems(data);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Failed to load notes index:", error);
-          setIsLoading(false);
-        });
-    }
-  }, [open, items.length, isLoading]);
 
   // キーボードショートカット (Cmd+K / Ctrl+K)
   useKeyboardShortcut(
