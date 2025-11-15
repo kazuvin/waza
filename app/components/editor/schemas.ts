@@ -19,7 +19,8 @@ export const StyleConfigSchema = v.object({
 
   // グリッド
   gridCols: v.optional(v.number()),
-  gridRows: v.optional(v.number()),
+  colSpan: v.optional(v.number()),
+  rowSpan: v.optional(v.number()),
 
   // スペーシング
   padding: v.optional(v.picklist(["none", "sm", "md", "lg", "xl"])),

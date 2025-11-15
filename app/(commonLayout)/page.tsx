@@ -19,7 +19,7 @@ const sampleSections: Section[] = [
         level: "h1",
         content: "Welcome to Our Platform",
         style: {
-          gridCols: 8,
+          colSpan: 8,
           fontSize: "4xl",
           fontWeight: "bold",
           borderWidth: 1,
@@ -28,7 +28,7 @@ const sampleSections: Section[] = [
       {
         type: BlockType.Container,
         style: {
-          gridCols: 4,
+          colSpan: 4,
         },
         blocks: [
           {
@@ -44,11 +44,11 @@ const sampleSections: Section[] = [
       {
         type: BlockType.Container,
         style: {
-          gridCols: 12,
           borderWidth: 2,
           borderColor: "blue-500",
           padding: "md",
           display: "grid",
+          gridCols: 12,
           gap: "md",
         },
         blocks: [

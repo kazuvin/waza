@@ -51,11 +51,15 @@ export function styleConfigToClassName(config?: StyleConfig): string {
 
   // グリッド
   if (config.gridCols) {
-    classes.push(`col-span-${config.gridCols}`);
+    classes.push(`grid-cols-${config.gridCols}`);
   }
 
-  if (config.gridRows) {
-    classes.push(`row-span-${config.gridRows}`);
+  if (config.colSpan) {
+    classes.push(`col-span-${config.colSpan}`);
+  }
+
+  if (config.rowSpan) {
+    classes.push(`row-span-${config.rowSpan}`);
   }
 
   // スペーシング
