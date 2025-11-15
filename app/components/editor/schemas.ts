@@ -1,4 +1,21 @@
 import * as v from "valibot";
+import {
+  Display,
+  FlexDirection,
+  AlignItems,
+  JustifyContent,
+  GridCols,
+  ColSpan,
+  RowSpan,
+  Spacing,
+  BorderWidth,
+  BorderRadius,
+  FontSize,
+  FontWeight,
+  TextAlign,
+  Animation,
+  Transition,
+} from "./style-constants";
 
 // ブロックタイプの定義
 export const BlockType = {
@@ -7,63 +24,51 @@ export const BlockType = {
   Container: "CONTAINER",
 } as const;
 
-// スタイル設定スキーマ
+// スタイル設定スキーマ（定数ベース）
 export const StyleConfigSchema = v.object({
   // レイアウト
-  display: v.optional(v.picklist(["block", "flex", "grid", "inline-block"])),
-  flexDirection: v.optional(v.picklist(["row", "column"])),
-  alignItems: v.optional(v.picklist(["start", "center", "end", "stretch"])),
-  justifyContent: v.optional(
-    v.picklist(["start", "center", "end", "between", "around"])
-  ),
+  display: v.optional(v.enum(Display)),
+  flexDirection: v.optional(v.enum(FlexDirection)),
+  alignItems: v.optional(v.enum(AlignItems)),
+  justifyContent: v.optional(v.enum(JustifyContent)),
 
   // グリッド
-  gridCols: v.optional(v.number()),
-  colSpan: v.optional(v.number()),
-  rowSpan: v.optional(v.number()),
+  gridCols: v.optional(v.enum(GridCols)),
+  colSpan: v.optional(v.enum(ColSpan)),
+  rowSpan: v.optional(v.enum(RowSpan)),
 
   // スペーシング
-  padding: v.optional(v.picklist(["none", "sm", "md", "lg", "xl"])),
-  margin: v.optional(v.picklist(["none", "sm", "md", "lg", "xl"])),
-  gap: v.optional(v.picklist(["none", "sm", "md", "lg", "xl"])),
+  padding: v.optional(v.enum(Spacing)),
+  paddingX: v.optional(v.enum(Spacing)),
+  paddingY: v.optional(v.enum(Spacing)),
+  margin: v.optional(v.enum(Spacing)),
+  marginX: v.optional(v.enum(Spacing)),
+  marginY: v.optional(v.enum(Spacing)),
+  gap: v.optional(v.enum(Spacing)),
 
-  // カラー
+  // カラー（Tailwind色名 or HEX）
   backgroundColor: v.optional(v.string()),
   textColor: v.optional(v.string()),
   borderColor: v.optional(v.string()),
 
   // ボーダー
-  borderWidth: v.optional(v.number()),
-  borderRadius: v.optional(v.picklist(["none", "sm", "md", "lg", "full"])),
+  borderWidth: v.optional(v.enum(BorderWidth)),
+  borderRadius: v.optional(v.enum(BorderRadius)),
 
   // タイポグラフィ
-  fontSize: v.optional(
-    v.picklist([
-      "xs",
-      "sm",
-      "base",
-      "lg",
-      "xl",
-      "2xl",
-      "3xl",
-      "4xl",
-      "5xl",
-      "6xl",
-      "7xl",
-    ])
-  ),
-  fontWeight: v.optional(v.picklist(["normal", "medium", "semibold", "bold"])),
-  textAlign: v.optional(v.picklist(["left", "center", "right"])),
+  fontSize: v.optional(v.enum(FontSize)),
+  fontWeight: v.optional(v.enum(FontWeight)),
+  textAlign: v.optional(v.enum(TextAlign)),
 
-  // サイズ
+  // サイズ（Tailwindの標準値）
   width: v.optional(v.string()),
   height: v.optional(v.string()),
 
   // アニメーション
-  animation: v.optional(v.picklist(["none", "fade-in", "slide-up", "bounce"])),
-  transition: v.optional(v.picklist(["none", "all", "colors", "transform"])),
+  animation: v.optional(v.enum(Animation)),
+  transition: v.optional(v.enum(Transition)),
 
-  // 高度な設定用（GUI設定を上書き）
+  // 高度な設定用（GUI設定を上書き、任意値も可）
   customClasses: v.optional(v.string()),
 });
 

@@ -1,8 +1,31 @@
 import { cn } from "@/lib/cn";
 import { StyleConfig } from "./schemas";
+import {
+  DisplayMapping,
+  FlexDirectionMapping,
+  AlignItemsMapping,
+  JustifyContentMapping,
+  GridColsMapping,
+  ColSpanMapping,
+  RowSpanMapping,
+  PaddingMapping,
+  PaddingXMapping,
+  PaddingYMapping,
+  MarginMapping,
+  MarginXMapping,
+  MarginYMapping,
+  GapMapping,
+  BorderWidthMapping,
+  BorderRadiusMapping,
+  FontSizeMapping,
+  FontWeightMapping,
+  TextAlignMapping,
+  AnimationMapping,
+  TransitionMapping,
+} from "./style-constants";
 
 /**
- * StyleConfigをTailwind CSSクラス名に変換
+ * StyleConfigをTailwind CSSクラス名に変換（マッピングベース）
  */
 export function styleConfigToClassName(config?: StyleConfig): string {
   if (!config) return "";
@@ -10,77 +33,62 @@ export function styleConfigToClassName(config?: StyleConfig): string {
   const classes: string[] = [];
 
   // レイアウト
-  if (config.display) {
-    const displayMap = {
-      block: "block",
-      flex: "flex",
-      grid: "grid",
-      "inline-block": "inline-block",
-    };
-    classes.push(displayMap[config.display]);
+  if (config.display && config.display in DisplayMapping) {
+    classes.push(DisplayMapping[config.display as keyof typeof DisplayMapping]);
   }
 
-  if (config.flexDirection) {
-    const flexDirMap = {
-      row: "flex-row",
-      column: "flex-col",
-    };
-    classes.push(flexDirMap[config.flexDirection]);
+  if (config.flexDirection && config.flexDirection in FlexDirectionMapping) {
+    classes.push(FlexDirectionMapping[config.flexDirection as keyof typeof FlexDirectionMapping]);
   }
 
-  if (config.alignItems) {
-    const alignMap = {
-      start: "items-start",
-      center: "items-center",
-      end: "items-end",
-      stretch: "items-stretch",
-    };
-    classes.push(alignMap[config.alignItems]);
+  if (config.alignItems && config.alignItems in AlignItemsMapping) {
+    classes.push(AlignItemsMapping[config.alignItems as keyof typeof AlignItemsMapping]);
   }
 
-  if (config.justifyContent) {
-    const justifyMap = {
-      start: "justify-start",
-      center: "justify-center",
-      end: "justify-end",
-      between: "justify-between",
-      around: "justify-around",
-    };
-    classes.push(justifyMap[config.justifyContent]);
+  if (config.justifyContent && config.justifyContent in JustifyContentMapping) {
+    classes.push(JustifyContentMapping[config.justifyContent as keyof typeof JustifyContentMapping]);
   }
 
   // グリッド
-  if (config.gridCols) {
-    classes.push(`grid-cols-${config.gridCols}`);
+  if (config.gridCols && config.gridCols in GridColsMapping) {
+    classes.push(GridColsMapping[config.gridCols as keyof typeof GridColsMapping]);
   }
 
-  if (config.colSpan) {
-    classes.push(`col-span-${config.colSpan}`);
+  if (config.colSpan && config.colSpan in ColSpanMapping) {
+    classes.push(ColSpanMapping[config.colSpan as keyof typeof ColSpanMapping]);
   }
 
-  if (config.rowSpan) {
-    classes.push(`row-span-${config.rowSpan}`);
+  if (config.rowSpan && config.rowSpan in RowSpanMapping) {
+    classes.push(RowSpanMapping[config.rowSpan as keyof typeof RowSpanMapping]);
   }
 
   // スペーシング
-  const spacingMap = {
-    none: "0",
-    sm: "2",
-    md: "4",
-    lg: "6",
-    xl: "8",
-  };
-
-  if (config.padding) {
-    classes.push(`p-${spacingMap[config.padding]}`);
+  if (config.padding && config.padding in PaddingMapping) {
+    classes.push(PaddingMapping[config.padding as keyof typeof PaddingMapping]);
   }
 
-  if (config.margin) {
-    classes.push(`m-${spacingMap[config.margin]}`);
+  if (config.paddingX && config.paddingX in PaddingXMapping) {
+    classes.push(PaddingXMapping[config.paddingX as keyof typeof PaddingXMapping]);
   }
 
-  if (config.gap) {
-    classes.push(`gap-${spacingMap[config.gap]}`);
+  if (config.paddingY && config.paddingY in PaddingYMapping) {
+    classes.push(PaddingYMapping[config.paddingY as keyof typeof PaddingYMapping]);
+  }
+
+  if (config.margin && config.margin in MarginMapping) {
+    classes.push(MarginMapping[config.margin as keyof typeof MarginMapping]);
+  }
+
+  if (config.marginX && config.marginX in MarginXMapping) {
+    classes.push(MarginXMapping[config.marginX as keyof typeof MarginXMapping]);
+  }
+
+  if (config.marginY && config.marginY in MarginYMapping) {
+    classes.push(MarginYMapping[config.marginY as keyof typeof MarginYMapping]);
+  }
+
+  if (config.gap && config.gap in GapMapping) {
+    classes.push(GapMapping[config.gap as keyof typeof GapMapping]);
   }
 
   // カラー
@@ -109,70 +117,45 @@ export function styleConfigToClassName(config?: StyleConfig): string {
   }
 
   // ボーダー
-  if (config.borderWidth !== undefined) {
-    if (config.borderWidth === 0) {
-      classes.push("border-0");
-    } else if (config.borderWidth === 1) {
-      classes.push("border");
-    } else {
-      classes.push(`border-${config.borderWidth}`);
-    }
+  if (config.borderWidth && config.borderWidth in BorderWidthMapping) {
+    classes.push(BorderWidthMapping[config.borderWidth as keyof typeof BorderWidthMapping]);
   }
 
-  if (config.borderRadius) {
-    const radiusMap = {
-      none: "rounded-none",
-      sm: "rounded-sm",
-      md: "rounded-md",
-      lg: "rounded-lg",
-      full: "rounded-full",
-    };
-    classes.push(radiusMap[config.borderRadius]);
+  if (config.borderRadius && config.borderRadius in BorderRadiusMapping) {
+    classes.push(BorderRadiusMapping[config.borderRadius as keyof typeof BorderRadiusMapping]);
   }
 
   // タイポグラフィ
-  if (config.fontSize) {
-    classes.push(`text-${config.fontSize}`);
+  if (config.fontSize && config.fontSize in FontSizeMapping) {
+    classes.push(FontSizeMapping[config.fontSize as keyof typeof FontSizeMapping]);
   }
 
-  if (config.fontWeight) {
-    classes.push(`font-${config.fontWeight}`);
+  if (config.fontWeight && config.fontWeight in FontWeightMapping) {
+    classes.push(FontWeightMapping[config.fontWeight as keyof typeof FontWeightMapping]);
   }
 
-  if (config.textAlign) {
-    classes.push(`text-${config.textAlign}`);
+  if (config.textAlign && config.textAlign in TextAlignMapping) {
+    classes.push(TextAlignMapping[config.textAlign as keyof typeof TextAlignMapping]);
   }
 
   // サイズ
   if (config.width) {
-    classes.push(
-      config.width.startsWith("w-") ? config.width : `w-[${config.width}]`
-    );
+    classes.push(config.width.startsWith("w-") ? config.width : `w-${config.width}`);
   }
 
   if (config.height) {
-    classes.push(
-      config.height.startsWith("h-") ? config.height : `h-[${config.height}]`
-    );
+    classes.push(config.height.startsWith("h-") ? config.height : `h-${config.height}`);
   }
 
   // アニメーション
-  if (config.animation && config.animation !== "none") {
-    const animationMap = {
-      "fade-in": "animate-fade-in",
-      "slide-up": "animate-slide-up",
-      bounce: "animate-bounce",
-    };
-    classes.push(animationMap[config.animation]);
+  if (config.animation && config.animation in AnimationMapping) {
+    const animationClass = AnimationMapping[config.animation as keyof typeof AnimationMapping];
+    if (animationClass) classes.push(animationClass);
   }
 
-  if (config.transition && config.transition !== "none") {
-    const transitionMap = {
-      all: "transition-all",
-      colors: "transition-colors",
-      transform: "transition-transform",
-    };
-    classes.push(transitionMap[config.transition]);
+  if (config.transition && config.transition in TransitionMapping) {
+    const transitionClass = TransitionMapping[config.transition as keyof typeof TransitionMapping];
+    if (transitionClass) classes.push(transitionClass);
   }
 
   // カスタムクラス（最優先）
