@@ -1,4 +1,4 @@
-import { LPSection, Section, BlockType } from "../components/editor";
+import { LPSection, Section, BlockType } from "../components/lp";
 import { APP_NAME, APP_DESCRIPTION } from "@/config";
 
 // 魅力的なランディングページのサンプルセクション

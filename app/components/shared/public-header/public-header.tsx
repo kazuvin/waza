@@ -4,7 +4,7 @@ import { CommandSearch } from "../command-search";
 import { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 
-export function AppHeader({ className, ...props }: ComponentProps<"div">) {
+export function PublicHeader({ className, ...props }: ComponentProps<"div">) {
   return (
     <header
       className={cn(
@@ -19,10 +19,7 @@ export function AppHeader({ className, ...props }: ComponentProps<"div">) {
       <div className="flex items-center gap-5">
         <nav className="flex items-center gap-5">
           <ul className="flex items-center gap-4 text-sm">
-            <Link href="#">メニュー１</Link>
-          </ul>
-          <ul className="flex items-center gap-4 text-sm">
-            <Link href="#">メニュー２</Link>
+            <Link href="/dashboard">ダッシュボード</Link>
           </ul>
         </nav>
         <CommandSearch />

@@ -71,3 +71,19 @@ export type ContainerBlock = v.InferOutput<typeof ContainerBlockSchema>;
 
 // style プロパティの型を CSSProperties として明示的にエクスポート
 export type BlockStyle = CSSProperties;
+
+// LPスキーマ
+export const LPSchema = v.object({
+  id: v.string(),
+  title: v.string(),
+  slug: v.string(),
+  description: v.optional(v.string()),
+  sections: v.array(SectionSchema),
+  createdAt: v.optional(v.pipe(v.string(), v.isoTimestamp())),
+  updatedAt: v.optional(v.pipe(v.string(), v.isoTimestamp())),
+  publishedAt: v.optional(v.pipe(v.string(), v.isoTimestamp())),
+  status: v.optional(v.picklist(["draft", "published", "archived"])),
+});
+
+// LP型エクスポート
+export type LP = v.InferOutput<typeof LPSchema>;
