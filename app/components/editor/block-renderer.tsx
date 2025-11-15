@@ -3,9 +3,10 @@ import {
   BlockType,
   TextBlock,
   HeadingBlock,
+  ButtonBlock,
   ContainerBlock,
 } from "./schemas";
-import { mergeStyles } from "./style-converter";
+import { cn } from "@/lib/cn";
 
 type BlockRendererProps = {
   block: Block;
@@ -17,6 +18,8 @@ export function BlockRenderer({ block }: BlockRendererProps) {
       return <TextBlockComponent block={block} />;
     case BlockType.Heading:
       return <HeadingBlockComponent block={block} />;
+    case BlockType.Button:
+      return <ButtonBlockComponent block={block} />;
     case BlockType.Container:
       return <ContainerBlockComponent block={block} />;
     default:
@@ -25,20 +28,41 @@ export function BlockRenderer({ block }: BlockRendererProps) {
 }
 
 function TextBlockComponent({ block }: { block: TextBlock }) {
-  const className = mergeStyles(block.style, block.className);
-  return <p className={className}>{block.content}</p>;
+  return (
+    <p className={cn(block.className)} style={block.style}>
+      {block.content}
+    </p>
+  );
 }
 
 function HeadingBlockComponent({ block }: { block: HeadingBlock }) {
   const Tag = block.level;
-  const className = mergeStyles(block.style, block.className);
-  return <Tag className={className}>{block.content}</Tag>;
+  return (
+    <Tag className={cn(block.className)} style={block.style}>
+      {block.content}
+    </Tag>
+  );
+}
+
+function ButtonBlockComponent({ block }: { block: ButtonBlock }) {
+  if (block.href) {
+    return (
+      <a href={block.href} className={cn(block.className)} style={block.style}>
+        {block.content}
+      </a>
+    );
+  }
+
+  return (
+    <button className={cn(block.className)} style={block.style}>
+      {block.content}
+    </button>
+  );
 }
 
 function ContainerBlockComponent({ block }: { block: ContainerBlock }) {
-  const className = mergeStyles(block.style, block.className);
   return (
-    <div className={className}>
+    <div className={cn(block.className)} style={block.style}>
       {block.blocks.map((childBlock, index) => (
         <BlockRenderer key={index} block={childBlock} />
       ))}
