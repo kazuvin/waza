@@ -1,29 +1,38 @@
 "use client";
 
-import type { SvgData } from "./svg-editor";
+import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { usePinchZoom } from "./hooks/use-pinch-zoom";
 
-type SvgCanvasProps = {
-  svgData: SvgData;
-  selectedPathId: string | null;
-  onSelectPath: (id: string | null) => void;
-};
+export function SvgCanvas() {
+  const { svgData, selectedPathId, setSelectedPathId, zoom, zoomTo } =
+    useSvgEditorContext();
 
-export function SvgCanvas({
-  svgData,
-  selectedPathId,
-  onSelectPath,
-}: SvgCanvasProps) {
+  const containerRef = usePinchZoom({
+    currentZoom: zoom,
+    onZoomChange: zoomTo,
+  });
+
   return (
-    <div className="flex h-full items-center justify-center bg-gray-50 p-8">
-      <svg
-        width={svgData.width}
-        height={svgData.height}
-        viewBox={svgData.viewBox}
-        className="border-2 border-gray-300 bg-white"
-        role="img"
-        aria-label="SVGキャンバス"
-        onClick={() => onSelectPath(null)}
+    <div
+      ref={containerRef}
+      className="flex h-full items-center justify-center overflow-auto bg-gray-50 p-8"
+    >
+      <div
+        style={{
+          transform: `scale(${zoom})`,
+          transformOrigin: "center",
+          transition: "transform 0.2s ease-out",
+        }}
       >
+        <svg
+          width={svgData.width}
+          height={svgData.height}
+          viewBox={svgData.viewBox}
+          className="border-2 border-gray-300 bg-white"
+          role="img"
+          aria-label="SVGキャンバス"
+          onClick={() => setSelectedPathId(null)}
+        >
         <title>SVG編集キャンバス</title>
         <desc>
           {svgData.paths.length > 0
@@ -42,13 +51,7 @@ export function SvgCanvas({
               strokeWidth={path.strokeWidth}
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
-                onSelectPath(path.id);
-              }}
-              onKeyDown={(e: React.KeyboardEvent) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onSelectPath(path.id);
-                }
+                setSelectedPathId(path.id);
               }}
               tabIndex={0}
               role="button"
@@ -62,7 +65,8 @@ export function SvgCanvas({
             />
           );
         })}
-      </svg>
+        </svg>
+      </div>
     </div>
   );
 }

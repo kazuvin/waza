@@ -1,37 +1,216 @@
-import { useState, useMemo } from "react";
+import { useReducer, useState } from "react";
 import type { SvgData, PathElement } from "../svg-editor";
-import { parseSvgCode, getDefaultSvgData } from "../utils/svg-parser";
+import { parseSvgCode } from "../utils/svg-parser";
+import {
+  type HistoryState,
+  addHistory,
+  undo,
+  redo,
+  createInitialHistory,
+  canUndo,
+  canRedo,
+} from "../utils/history";
+import { useKeyboardShortcut } from "@/app/hooks/use-keyboard-shortcut";
 
 type UseSvgEditorProps = {
   initialSvgCode?: string;
 };
 
-export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
-  // 初期SVGデータをuseMemoでパース（クライアントサイドのみ）
-  const initialData = useMemo(() => {
-    if (typeof window === "undefined") {
-      return getDefaultSvgData();
+// アクションタイプの定義
+type SvgEditorAction =
+  | { type: "UPDATE_PATH"; id: string; updates: Partial<PathElement> }
+  | {
+      type: "UPDATE_CANVAS";
+      updates: Partial<Pick<SvgData, "width" | "height" | "viewBox">>;
     }
-    return initialSvgCode ? parseSvgCode(initialSvgCode) : getDefaultSvgData();
-  }, [initialSvgCode]);
+  | { type: "DELETE_PATH"; id: string }
+  | { type: "UNDO" }
+  | { type: "REDO" };
 
-  const [svgData, setSvgData] = useState<SvgData>(initialData);
+// Reducerの実装
+function svgEditorReducer(
+  state: HistoryState<SvgData>,
+  action: SvgEditorAction
+): HistoryState<SvgData> {
+  switch (action.type) {
+    case "UPDATE_PATH": {
+      const newState: SvgData = {
+        ...state.present,
+        paths: state.present.paths.map((p) =>
+          p.id === action.id ? { ...p, ...action.updates } : p
+        ),
+      };
+      return addHistory(state, newState);
+    }
+
+    case "UPDATE_CANVAS": {
+      const newState: SvgData = {
+        ...state.present,
+        ...action.updates,
+      };
+      return addHistory(state, newState);
+    }
+
+    case "DELETE_PATH": {
+      const newState: SvgData = {
+        ...state.present,
+        paths: state.present.paths.filter((p) => p.id !== action.id),
+      };
+      return addHistory(state, newState);
+    }
+
+    case "UNDO":
+      return undo(state);
+
+    case "REDO":
+      return redo(state);
+
+    default:
+      return state;
+  }
+}
+
+// ズームレベルのプリセット
+const ZOOM_LEVELS = [0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4, 5];
+const DEFAULT_ZOOM = 1;
+
+export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
+  // 初期データを取得
+  const initialData = parseSvgCode(initialSvgCode);
+
+  // useReducerで履歴管理
+  const [history, dispatch] = useReducer(
+    svgEditorReducer,
+    createInitialHistory(initialData)
+  );
+
   const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
 
+  // 現在のSVGデータ
+  const svgData = history.present;
   const selectedPath = svgData.paths.find((p) => p.id === selectedPathId);
 
+  // アクション関数
   const updatePath = (id: string, updates: Partial<PathElement>) => {
-    setSvgData((prev) => ({
-      ...prev,
-      paths: prev.paths.map((p) => (p.id === id ? { ...p, ...updates } : p)),
-    }));
+    dispatch({ type: "UPDATE_PATH", id, updates });
   };
 
   const updateCanvas = (
     updates: Partial<Pick<SvgData, "width" | "height" | "viewBox">>
   ) => {
-    setSvgData((prev) => ({ ...prev, ...updates }));
+    dispatch({ type: "UPDATE_CANVAS", updates });
   };
+
+  const deletePath = (id: string) => {
+    dispatch({ type: "DELETE_PATH", id });
+    // 削除したパスが選択されていた場合、選択を解除
+    if (selectedPathId === id) {
+      setSelectedPathId(null);
+    }
+  };
+
+  const undoAction = () => {
+    dispatch({ type: "UNDO" });
+  };
+
+  const redoAction = () => {
+    dispatch({ type: "REDO" });
+  };
+
+  // ズーム操作
+  const zoomIn = () => {
+    const currentIndex = ZOOM_LEVELS.findIndex((level) => level >= zoom);
+    const nextIndex = Math.min(currentIndex + 1, ZOOM_LEVELS.length - 1);
+    setZoom(ZOOM_LEVELS[nextIndex]);
+  };
+
+  const zoomOut = () => {
+    const currentIndex = ZOOM_LEVELS.findIndex((level) => level >= zoom);
+    const prevIndex = Math.max(currentIndex - 1, 0);
+    setZoom(ZOOM_LEVELS[prevIndex]);
+  };
+
+  const zoomTo = (level: number) => {
+    const clampedZoom = Math.max(0.1, Math.min(5, level));
+    setZoom(clampedZoom);
+  };
+
+  const zoomToFit = () => {
+    // フィット機能は後でキャンバスサイズに基づいて実装可能
+    setZoom(DEFAULT_ZOOM);
+  };
+
+  const resetZoom = () => {
+    setZoom(DEFAULT_ZOOM);
+  };
+
+  // キーボードショートカットの設定
+  // Deleteキーでパスを削除
+  useKeyboardShortcut(
+    {
+      key: "Delete",
+      enabled: selectedPathId !== null,
+    },
+    () => {
+      if (selectedPathId) {
+        deletePath(selectedPathId);
+      }
+    }
+  );
+
+  // Backspaceキーでもパスを削除（macOS対応）
+  useKeyboardShortcut(
+    {
+      key: "Backspace",
+      enabled: selectedPathId !== null,
+    },
+    () => {
+      if (selectedPathId) {
+        deletePath(selectedPathId);
+      }
+    }
+  );
+
+  // Cmd+Z / Ctrl+Z でUndo
+  useKeyboardShortcut(
+    {
+      key: "z",
+      metaKey: true,
+      ctrlKey: true,
+      enabled: canUndo(history),
+    },
+    () => {
+      undoAction();
+    }
+  );
+
+  // Cmd+Shift+Z / Ctrl+Shift+Z でRedo
+  useKeyboardShortcut(
+    {
+      key: "z",
+      metaKey: true,
+      ctrlKey: true,
+      shiftKey: true,
+      enabled: canRedo(history),
+    },
+    () => {
+      redoAction();
+    }
+  );
+
+  // Cmd+Y / Ctrl+Y でRedo（Windows/Linux向け）
+  useKeyboardShortcut(
+    {
+      key: "y",
+      metaKey: true,
+      ctrlKey: true,
+      enabled: canRedo(history),
+    },
+    () => {
+      redoAction();
+    }
+  );
 
   return {
     svgData,
@@ -40,5 +219,16 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
     setSelectedPathId,
     updatePath,
     updateCanvas,
+    deletePath,
+    undo: undoAction,
+    redo: redoAction,
+    canUndo: canUndo(history),
+    canRedo: canRedo(history),
+    zoom,
+    zoomIn,
+    zoomOut,
+    zoomTo,
+    zoomToFit,
+    resetZoom,
   };
 }
