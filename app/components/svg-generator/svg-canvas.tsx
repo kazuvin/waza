@@ -28,7 +28,17 @@ export function SvgCanvas() {
           width={svgData.width}
           height={svgData.height}
           viewBox={svgData.viewBox}
-          className="border-2 border-gray-300 bg-white"
+          className="border-2 border-gray-100"
+          style={{
+            background: `
+              linear-gradient(45deg, #eee 25%, transparent 25%),
+              linear-gradient(-45deg, #eee 25%, transparent 25%),
+              linear-gradient(45deg, transparent 75%, #eee 75%),
+              linear-gradient(-45deg, transparent 75%, #eee 75%)
+            `,
+            backgroundSize: "40px 40px",
+            backgroundPosition: "0 0, 0 20px, 20px -20px, -20px 0px",
+          }}
           role="img"
           aria-label="SVGキャンバス"
           onClick={() => setSelectedPathId(null)}

@@ -12,7 +12,7 @@ export function PropertiesPanel() {
     deletePath,
   } = useSvgEditorContext();
   return (
-    <div className="bg-card border-border flex h-3/4 flex-col overflow-hidden rounded-2xl border">
+    <div className="bg-card/80 border-border flex h-3/4 flex-col overflow-hidden rounded-2xl border backdrop-blur-2xl">
       <div className="border-border shrink-0 border-b p-3">
         <h2 className="text-sm font-semibold">プロパティ</h2>
       </div>
