@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import type { Section } from "../schemas";
+import type { Block } from "../schemas";
 
-type SectionSettingsProps = {
-  section: Section | undefined;
-  onUpdate: (updates: Partial<Section>) => void;
+type BlockSettingsProps = {
+  block: Block | undefined;
+  onUpdate: (updates: Partial<Block>) => void;
 };
 
-export function SectionSettings({ section, onUpdate }: SectionSettingsProps) {
+export function BlockSettings({ block, onUpdate }: BlockSettingsProps) {
   const [position, setPosition] = useState({ x: 0, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -60,7 +60,7 @@ export function SectionSettings({ section, onUpdate }: SectionSettingsProps) {
     };
   }, [isDragging, dragOffset]);
 
-  if (!section) {
+  if (!block) {
     return (
       <aside
         ref={panelRef}
@@ -71,21 +71,41 @@ export function SectionSettings({ section, onUpdate }: SectionSettingsProps) {
           cursor: isDragging ? "grabbing" : "grab",
         }}
         role="complementary"
-        aria-label="Section settings"
+        aria-label="Block settings"
       >
         <div
           className="mb-4 cursor-grab select-none active:cursor-grabbing"
           onMouseDown={handleMouseDown}
         >
           <div className="bg-muted mx-auto mb-2 h-1 w-12 rounded-full" />
-          <h2 className="text-lg font-semibold">Section Settings</h2>
+          <h2 className="text-lg font-semibold">Block Settings</h2>
         </div>
         <p className="text-muted-foreground text-sm">
-          Select a section to edit its settings
+          Select a block to edit its settings
         </p>
       </aside>
     );
   }
+
+  const getBlockTypeLabel = (block: Block): string => {
+    switch (block.type) {
+      case "HEADING":
+        return `Heading (${(block as any).level})`;
+      case "TEXT":
+        return "Text";
+      case "BUTTON":
+        return "Button";
+      case "CONTAINER":
+        return "Container";
+      default:
+        return "Unknown";
+    }
+  };
+
+  const hasContent =
+    block.type === "HEADING" ||
+    block.type === "TEXT" ||
+    block.type === "BUTTON";
 
   return (
     <aside
@@ -97,43 +117,72 @@ export function SectionSettings({ section, onUpdate }: SectionSettingsProps) {
         cursor: isDragging ? "grabbing" : "auto",
       }}
       role="complementary"
-      aria-label="Section settings"
+      aria-label="Block settings"
     >
       <div
         className="mb-4 cursor-grab select-none active:cursor-grabbing"
         onMouseDown={handleMouseDown}
       >
         <div className="bg-muted mx-auto mb-2 h-1 w-12 rounded-full" />
-        <h2 className="text-lg font-semibold">Section Settings</h2>
+        <h2 className="text-lg font-semibold">Block Settings</h2>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label
-            htmlFor="section-order"
-            className="mb-2 block text-sm font-medium"
-          >
-            Order
-          </label>
-          <input
-            id="section-order"
-            type="number"
-            value={section.order}
-            onChange={(e) => onUpdate({ order: parseInt(e.target.value) })}
-            className="border-border focus:border-primary focus:ring-primary w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
-          />
+          <p className="text-muted-foreground mb-2 text-xs font-medium">
+            Block Type
+          </p>
+          <p className="text-sm font-semibold">{getBlockTypeLabel(block)}</p>
         </div>
+
+        {hasContent && (
+          <div>
+            <label
+              htmlFor="block-content"
+              className="mb-2 block text-sm font-medium"
+            >
+              Content
+            </label>
+            <textarea
+              id="block-content"
+              value={block.content || ""}
+              onChange={(e) => onUpdate({ content: e.target.value })}
+              className="border-border focus:border-primary focus:ring-primary w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+              rows={5}
+              placeholder="Enter content"
+            />
+          </div>
+        )}
+
+        {block.type === "BUTTON" && (
+          <div>
+            <label
+              htmlFor="block-href"
+              className="mb-2 block text-sm font-medium"
+            >
+              Link URL
+            </label>
+            <input
+              id="block-href"
+              type="text"
+              value={block.href || ""}
+              onChange={(e) => onUpdate({ href: e.target.value })}
+              className="border-border focus:border-primary focus:ring-primary w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+              placeholder="https://example.com"
+            />
+          </div>
+        )}
 
         <div>
           <label
-            htmlFor="section-style"
+            htmlFor="block-style"
             className="mb-2 block text-sm font-medium"
           >
             Style (CSS Properties)
           </label>
           <textarea
-            id="section-style"
-            value={JSON.stringify(section.style || {}, null, 2)}
+            id="block-style"
+            value={JSON.stringify(block.style || {}, null, 2)}
             onChange={(e) => {
               try {
                 const parsed = JSON.parse(e.target.value);
@@ -143,26 +192,32 @@ export function SectionSettings({ section, onUpdate }: SectionSettingsProps) {
               }
             }}
             className="border-border focus:border-primary focus:ring-primary w-full rounded-md border px-3 py-2 font-mono text-xs focus:ring-2 focus:outline-none"
-            placeholder='{\n  "display": "flex",\n  "padding": "2rem"\n}'
-            rows={8}
+            placeholder='{\n  "fontSize": "1.5rem",\n  "color": "#333"\n}'
+            rows={10}
           />
           <p className="text-muted-foreground mt-1 text-xs">
             Enter valid JSON format
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            id="section-enabled"
-            type="checkbox"
-            checked={section.enabled}
-            onChange={(e) => onUpdate({ enabled: e.target.checked })}
-            className="border-border focus:ring-primary h-4 w-4 rounded"
-          />
-          <label htmlFor="section-enabled" className="text-sm font-medium">
-            Enabled
-          </label>
-        </div>
+        {block.type !== "CONTAINER" && (
+          <div>
+            <label
+              htmlFor="block-className"
+              className="mb-2 block text-sm font-medium"
+            >
+              CSS Class
+            </label>
+            <input
+              id="block-className"
+              type="text"
+              value={block.className || ""}
+              onChange={(e) => onUpdate({ className: e.target.value })}
+              className="border-border focus:border-primary focus:ring-primary w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+              placeholder="e.g., text-center font-bold"
+            />
+          </div>
+        )}
       </div>
     </aside>
   );

@@ -11,6 +11,7 @@ export const BlockType = {
 
 // テキストブロックスキーマ
 export const TextBlockSchema = v.object({
+  id: v.string(),
   type: v.literal(BlockType.Text),
   content: v.string(),
   style: v.optional(v.any()), // CSSProperties
@@ -19,6 +20,7 @@ export const TextBlockSchema = v.object({
 
 // 見出しブロックスキーマ
 export const HeadingBlockSchema = v.object({
+  id: v.string(),
   type: v.literal(BlockType.Heading),
   level: v.picklist(["h1", "h2", "h3", "h4", "h5", "h6"]),
   content: v.string(),
@@ -28,6 +30,7 @@ export const HeadingBlockSchema = v.object({
 
 // ボタンブロックスキーマ
 export const ButtonBlockSchema = v.object({
+  id: v.string(),
   type: v.literal(BlockType.Button),
   content: v.string(),
   href: v.optional(v.string()),
@@ -35,21 +38,24 @@ export const ButtonBlockSchema = v.object({
   className: v.optional(v.string()),
 });
 
-// コンテナーブロックスキーマ
+// ブロック全体のスキーマ（再帰的定義のため、lazyを使用）
+export const BlockSchema: v.GenericSchema<Block> = v.lazy(() =>
+  v.variant("type", [
+    TextBlockSchema,
+    HeadingBlockSchema,
+    ButtonBlockSchema,
+    ContainerBlockSchema,
+  ])
+);
+
+// コンテナーブロックスキーマ（BlockSchemaを使用して再帰的に定義）
 export const ContainerBlockSchema = v.object({
+  id: v.string(),
   type: v.literal(BlockType.Container),
-  blocks: v.array(v.union([TextBlockSchema, HeadingBlockSchema, ButtonBlockSchema])),
+  blocks: v.array(BlockSchema),
   style: v.optional(v.any()), // CSSProperties
   className: v.optional(v.string()),
 });
-
-// ブロック全体のスキーマ
-export const BlockSchema = v.variant("type", [
-  TextBlockSchema,
-  HeadingBlockSchema,
-  ButtonBlockSchema,
-  ContainerBlockSchema,
-]);
 
 // セクションスキーマ
 export const SectionSchema = v.object({
@@ -62,12 +68,26 @@ export const SectionSchema = v.object({
 });
 
 // 型エクスポート
-export type Section = v.InferOutput<typeof SectionSchema>;
-export type Block = v.InferOutput<typeof BlockSchema>;
 export type TextBlock = v.InferOutput<typeof TextBlockSchema>;
 export type HeadingBlock = v.InferOutput<typeof HeadingBlockSchema>;
 export type ButtonBlock = v.InferOutput<typeof ButtonBlockSchema>;
-export type ContainerBlock = v.InferOutput<typeof ContainerBlockSchema>;
+
+// Block型（再帰的定義）
+export type Block =
+  | TextBlock
+  | HeadingBlock
+  | ButtonBlock
+  | ContainerBlock;
+
+export type ContainerBlock = {
+  id: string;
+  type: "CONTAINER";
+  blocks: Block[];
+  style?: CSSProperties;
+  className?: string;
+};
+
+export type Section = v.InferOutput<typeof SectionSchema>;
 
 // style プロパティの型を CSSProperties として明示的にエクスポート
 export type BlockStyle = CSSProperties;
