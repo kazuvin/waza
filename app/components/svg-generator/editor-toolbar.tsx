@@ -31,11 +31,7 @@ export function EditorToolbar({ onSave }: EditorToolbarProps) {
     zoomOut,
     zoomTo,
     isCropMode,
-    cropRect,
     toggleCropMode,
-    applyCrop,
-    svgData,
-    originalViewBox,
   } = useSvgEditorContext();
 
   const [isZoomInputFocused, setIsZoomInputFocused] = useState(false);
@@ -133,46 +129,6 @@ export function EditorToolbar({ onSave }: EditorToolbarProps) {
       </div>
 
       <div className="ml-auto flex gap-2">
-        {/* クロップモード中の追加UI */}
-        {isCropMode && (
-          <div className="flex items-center gap-4 rounded bg-blue-50 px-3 py-1.5 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-700">全体:</span>
-              <span className="font-mono text-gray-900">
-                {(() => {
-                  const originalParts = originalViewBox.split(" ").map(Number);
-                  return `${Math.round(originalParts[2])} × ${Math.round(originalParts[3])}`;
-                })()}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 border-l border-gray-300 pl-4">
-              <span className="font-medium text-green-700">現在:</span>
-              <span className="font-mono text-green-800">
-                {(() => {
-                  const viewBoxParts = svgData.viewBox.split(" ").map(Number);
-                  return `${Math.round(viewBoxParts[2])} × ${Math.round(viewBoxParts[3])}`;
-                })()}
-              </span>
-            </div>
-            {cropRect && (
-              <div className="flex items-center gap-2 border-l border-gray-300 pl-4">
-                <span className="font-medium text-blue-700">新しいクロップ:</span>
-                <span className="font-mono text-blue-900">
-                  {Math.round(cropRect.width)} × {Math.round(cropRect.height)}
-                </span>
-                <span className="text-xs text-gray-500">
-                  (x: {Math.round(cropRect.x)}, y: {Math.round(cropRect.y)})
-                </span>
-              </div>
-            )}
-            {!cropRect && (
-              <span className="text-gray-600">
-                ドラッグして新しいクロップ範囲を選択
-              </span>
-            )}
-          </div>
-        )}
-
         <Button
           type="button"
           onClick={undo}
@@ -198,7 +154,7 @@ export function EditorToolbar({ onSave }: EditorToolbarProps) {
         </Button>
 
         {/* クロップボタン */}
-        {!isCropMode ? (
+        {!isCropMode && (
           <Button
             type="button"
             onClick={toggleCropMode}
@@ -209,30 +165,6 @@ export function EditorToolbar({ onSave }: EditorToolbarProps) {
           >
             クロップ
           </Button>
-        ) : (
-          <>
-            <Button
-              type="button"
-              onClick={applyCrop}
-              disabled={!cropRect}
-              variant="default"
-              size="sm"
-              aria-label="クロップを適用"
-              title="クロップを適用"
-            >
-              適用
-            </Button>
-            <Button
-              type="button"
-              onClick={toggleCropMode}
-              variant="outline"
-              size="sm"
-              aria-label="キャンセル"
-              title="キャンセル"
-            >
-              キャンセル
-            </Button>
-          </>
         )}
 
         <Button

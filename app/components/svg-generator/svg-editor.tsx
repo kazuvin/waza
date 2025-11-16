@@ -40,6 +40,7 @@ const sampleSvg = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="
 import { EditorToolbar } from "./editor-toolbar";
 import { PathList } from "./path-list";
 import { PropertiesPanel } from "./properties-panel";
+import { CropPanel } from "./crop-panel";
 import { SvgCanvas } from "./svg-canvas";
 import {
   SvgEditorProvider,
@@ -81,7 +82,7 @@ export function SvgEditor({
 }
 
 function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
-  const { svgData } = useSvgEditorContext();
+  const { svgData, isCropMode } = useSvgEditorContext();
 
   const handleSave = () => {
     const svgCode = generateSvgCode(svgData);
@@ -112,9 +113,9 @@ function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
         <aside
           className="absolute top-2 right-2 h-full w-80"
           role="complementary"
-          aria-label="プロパティパネル"
+          aria-label={isCropMode ? "クロップ設定" : "プロパティパネル"}
         >
-          <PropertiesPanel />
+          {isCropMode ? <CropPanel /> : <PropertiesPanel />}
         </aside>
       </div>
     </div>

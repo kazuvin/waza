@@ -15,6 +15,7 @@ export function SvgCanvas() {
     cropRect,
     setCropRect,
     originalViewBox,
+    lockAspectRatio,
   } = useSvgEditorContext();
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -22,6 +23,14 @@ export function SvgCanvas() {
   const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(
     null
   );
+  const [resizeHandle, setResizeHandle] = useState<string | null>(null);
+  const [isMovingCrop, setIsMovingCrop] = useState(false);
+  const [initialCropRect, setInitialCropRect] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
   // クロップモード時は元のviewBoxを表示、通常モードは現在のviewBoxを使用
   const displayViewBox = isCropMode ? originalViewBox : svgData.viewBox;
@@ -44,6 +53,33 @@ export function SvgCanvas() {
     return { x: svgP.x, y: svgP.y };
   };
 
+  // クロップ範囲内のマウスダウン（移動用）
+  const handleCropRectMouseDown = (e: React.MouseEvent) => {
+    if (!cropRect) return;
+    e.stopPropagation();
+
+    const coords = getSvgCoordinates(e.clientX, e.clientY);
+    setIsMovingCrop(true);
+    setDragStart(coords);
+    setInitialCropRect(cropRect);
+    setIsDragging(true);
+  };
+
+  // リサイズハンドルのマウスダウン
+  const handleResizeMouseDown = (
+    e: React.MouseEvent,
+    handle: string
+  ) => {
+    if (!cropRect) return;
+    e.stopPropagation();
+
+    const coords = getSvgCoordinates(e.clientX, e.clientY);
+    setResizeHandle(handle);
+    setDragStart(coords);
+    setInitialCropRect(cropRect);
+    setIsDragging(true);
+  };
+
   // クロップ選択のドラッグハンドラ
   const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!isCropMode) return;
@@ -51,6 +87,7 @@ export function SvgCanvas() {
     const coords = getSvgCoordinates(e.clientX, e.clientY);
     setDragStart(coords);
     setIsDragging(true);
+    setResizeHandle(null);
     setCropRect(null);
   };
 
@@ -58,18 +95,135 @@ export function SvgCanvas() {
     if (!isCropMode || !isDragging || !dragStart) return;
 
     const coords = getSvgCoordinates(e.clientX, e.clientY);
-    const x = Math.min(dragStart.x, coords.x);
-    const y = Math.min(dragStart.y, coords.y);
-    const width = Math.abs(coords.x - dragStart.x);
-    const height = Math.abs(coords.y - dragStart.y);
 
-    setCropRect({ x, y, width, height });
+    // クロップ範囲の移動中の場合
+    if (isMovingCrop && initialCropRect) {
+      const dx = coords.x - dragStart.x;
+      const dy = coords.y - dragStart.y;
+
+      setCropRect({
+        x: initialCropRect.x + dx,
+        y: initialCropRect.y + dy,
+        width: initialCropRect.width,
+        height: initialCropRect.height,
+      });
+    }
+    // リサイズ中の場合
+    else if (resizeHandle && initialCropRect) {
+      const dx = coords.x - dragStart.x;
+      const dy = coords.y - dragStart.y;
+      let newRect = { ...initialCropRect };
+
+      // アスペクト比維持モードの場合
+      if (lockAspectRatio) {
+        const aspectRatio = initialCropRect.width / initialCropRect.height;
+
+        switch (resizeHandle) {
+          case "nw": // 左上
+            // 対角線方向の変化量の平均を使用
+            const avgDeltaNW = (dx + dy) / 2;
+            newRect.width = initialCropRect.width - avgDeltaNW;
+            newRect.height = newRect.width / aspectRatio;
+            newRect.x = initialCropRect.x + (initialCropRect.width - newRect.width);
+            newRect.y = initialCropRect.y + (initialCropRect.height - newRect.height);
+            break;
+          case "ne": // 右上
+            const avgDeltaNE = (dx - dy) / 2;
+            newRect.width = initialCropRect.width + avgDeltaNE;
+            newRect.height = newRect.width / aspectRatio;
+            newRect.y = initialCropRect.y + (initialCropRect.height - newRect.height);
+            break;
+          case "se": // 右下
+            const avgDeltaSE = (dx + dy) / 2;
+            newRect.width = initialCropRect.width + avgDeltaSE;
+            newRect.height = newRect.width / aspectRatio;
+            break;
+          case "sw": // 左下
+            const avgDeltaSW = (-dx + dy) / 2;
+            newRect.width = initialCropRect.width + avgDeltaSW;
+            newRect.height = newRect.width / aspectRatio;
+            newRect.x = initialCropRect.x + (initialCropRect.width - newRect.width);
+            break;
+        }
+      } else {
+        // アスペクト比維持なしの通常リサイズ
+        switch (resizeHandle) {
+          case "nw": // 左上
+            newRect.x = initialCropRect.x + dx;
+            newRect.y = initialCropRect.y + dy;
+            newRect.width = initialCropRect.width - dx;
+            newRect.height = initialCropRect.height - dy;
+            break;
+          case "n": // 上
+            newRect.y = initialCropRect.y + dy;
+            newRect.height = initialCropRect.height - dy;
+            break;
+          case "ne": // 右上
+            newRect.y = initialCropRect.y + dy;
+            newRect.width = initialCropRect.width + dx;
+            newRect.height = initialCropRect.height - dy;
+            break;
+          case "e": // 右
+            newRect.width = initialCropRect.width + dx;
+            break;
+          case "se": // 右下
+            newRect.width = initialCropRect.width + dx;
+            newRect.height = initialCropRect.height + dy;
+            break;
+          case "s": // 下
+            newRect.height = initialCropRect.height + dy;
+            break;
+          case "sw": // 左下
+            newRect.x = initialCropRect.x + dx;
+            newRect.width = initialCropRect.width - dx;
+            newRect.height = initialCropRect.height + dy;
+            break;
+          case "w": // 左
+            newRect.x = initialCropRect.x + dx;
+            newRect.width = initialCropRect.width - dx;
+            break;
+        }
+      }
+
+      // 最小サイズを保証
+      if (newRect.width < 10) {
+        newRect.width = 10;
+        if (lockAspectRatio) {
+          newRect.height = 10 / (initialCropRect.width / initialCropRect.height);
+        }
+        if (resizeHandle.includes("w")) {
+          newRect.x = initialCropRect.x + initialCropRect.width - 10;
+        }
+      }
+      if (newRect.height < 10) {
+        newRect.height = 10;
+        if (lockAspectRatio) {
+          newRect.width = 10 * (initialCropRect.width / initialCropRect.height);
+        }
+        if (resizeHandle.includes("n")) {
+          newRect.y = initialCropRect.y + initialCropRect.height - 10;
+        }
+      }
+
+      setCropRect(newRect);
+    } else {
+      // 新規作成の場合
+      const x = Math.min(dragStart.x, coords.x);
+      const y = Math.min(dragStart.y, coords.y);
+      const width = Math.abs(coords.x - dragStart.x);
+      const height = Math.abs(coords.y - dragStart.y);
+
+      setCropRect({ x, y, width, height });
+    }
   };
 
   const handleMouseUp = () => {
     if (!isCropMode) return;
     setIsDragging(false);
     setDragStart(null);
+    setResizeHandle(null);
+    setIsMovingCrop(false);
+    setInitialCropRect(null);
   };
 
   return (
@@ -211,6 +365,55 @@ export function SvgCanvas() {
                     strokeDasharray={`${4 / zoom} ${4 / zoom}`}
                     pointerEvents="none"
                   />
+
+                  {/* クロップ範囲内のドラッグ可能エリア */}
+                  <rect
+                    x={cropRect.x}
+                    y={cropRect.y}
+                    width={cropRect.width}
+                    height={cropRect.height}
+                    fill="transparent"
+                    style={{ cursor: isDragging && isMovingCrop ? "grabbing" : "grab" }}
+                    onMouseDown={handleCropRectMouseDown}
+                  />
+
+                  {/* リサイズハンドル */}
+                  {(() => {
+                    const handleSize = 8 / zoom;
+                    // アスペクト比維持モードでは四隅のみ、それ以外は全8方向
+                    const handles = lockAspectRatio
+                      ? [
+                          { id: "nw", x: cropRect.x, y: cropRect.y, cursor: "nwse-resize" },
+                          { id: "ne", x: cropRect.x + cropRect.width, y: cropRect.y, cursor: "nesw-resize" },
+                          { id: "se", x: cropRect.x + cropRect.width, y: cropRect.y + cropRect.height, cursor: "nwse-resize" },
+                          { id: "sw", x: cropRect.x, y: cropRect.y + cropRect.height, cursor: "nesw-resize" },
+                        ]
+                      : [
+                          { id: "nw", x: cropRect.x, y: cropRect.y, cursor: "nwse-resize" },
+                          { id: "n", x: cropRect.x + cropRect.width / 2, y: cropRect.y, cursor: "ns-resize" },
+                          { id: "ne", x: cropRect.x + cropRect.width, y: cropRect.y, cursor: "nesw-resize" },
+                          { id: "e", x: cropRect.x + cropRect.width, y: cropRect.y + cropRect.height / 2, cursor: "ew-resize" },
+                          { id: "se", x: cropRect.x + cropRect.width, y: cropRect.y + cropRect.height, cursor: "nwse-resize" },
+                          { id: "s", x: cropRect.x + cropRect.width / 2, y: cropRect.y + cropRect.height, cursor: "ns-resize" },
+                          { id: "sw", x: cropRect.x, y: cropRect.y + cropRect.height, cursor: "nesw-resize" },
+                          { id: "w", x: cropRect.x, y: cropRect.y + cropRect.height / 2, cursor: "ew-resize" },
+                        ];
+
+                    return handles.map((handle) => (
+                      <rect
+                        key={handle.id}
+                        x={handle.x - handleSize / 2}
+                        y={handle.y - handleSize / 2}
+                        width={handleSize}
+                        height={handleSize}
+                        fill="white"
+                        stroke="#3b82f6"
+                        strokeWidth={1.5 / zoom}
+                        style={{ cursor: handle.cursor }}
+                        onMouseDown={(e) => handleResizeMouseDown(e, handle.id)}
+                      />
+                    ));
+                  })()}
                 </>
               )}
             </>

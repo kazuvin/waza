@@ -96,6 +96,7 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
     width: number;
     height: number;
   } | null>(null);
+  const [lockAspectRatio, setLockAspectRatio] = useState(false);
 
   // 現在のSVGデータ
   const svgData = history.present;
@@ -159,6 +160,7 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
   const toggleCropMode = () => {
     setIsCropMode(!isCropMode);
     setCropRect(null);
+    setLockAspectRatio(false);
     if (!isCropMode) {
       setSelectedPathId(null); // クロップモードに入る時は選択を解除
     }
@@ -269,5 +271,7 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
     toggleCropMode,
     applyCrop,
     originalViewBox,
+    lockAspectRatio,
+    setLockAspectRatio,
   };
 }

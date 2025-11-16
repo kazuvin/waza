@@ -1,6 +1,7 @@
 "use client";
 
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { RightPanel } from "./right-panel";
 
 export function PropertiesPanel() {
   const {
@@ -12,15 +13,10 @@ export function PropertiesPanel() {
     deletePath,
   } = useSvgEditorContext();
   return (
-    <div className="bg-card/80 border-border flex h-3/4 flex-col overflow-hidden rounded-2xl border backdrop-blur-2xl">
-      <div className="border-border shrink-0 border-b p-3">
-        <h2 className="text-sm font-semibold">プロパティ</h2>
-      </div>
-
+    <RightPanel title="プロパティ">
       <form
         onSubmit={(e) => e.preventDefault()}
         aria-label="プロパティフォーム"
-        className="overflow-y-auto px-3"
       >
         {/* キャンバス設定 */}
         <fieldset className="border-border mb-6 space-y-4 border-b pt-3 pb-6">
@@ -194,6 +190,6 @@ export function PropertiesPanel() {
           <p className="text-sm text-gray-500">パスを選択してください</p>
         )}
       </form>
-    </div>
+    </RightPanel>
   );
 }
