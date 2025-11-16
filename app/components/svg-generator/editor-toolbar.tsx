@@ -22,15 +22,15 @@ const ZOOM_PRESETS = [
 
 export function EditorToolbar({ onSave }: EditorToolbarProps) {
   const {
-    undo,
-    redo,
     canUndo,
     canRedo,
     zoom,
+    isCropMode,
+    undo,
+    redo,
     zoomIn,
     zoomOut,
     zoomTo,
-    isCropMode,
   } = useSvgEditorContext();
 
   const [isZoomInputFocused, setIsZoomInputFocused] = useState(false);

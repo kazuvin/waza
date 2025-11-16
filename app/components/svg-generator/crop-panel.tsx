@@ -6,13 +6,12 @@ import { Button } from "@/app/components/ui/button/button";
 
 export function CropPanel() {
   const {
-    svgData,
     originalViewBox,
     cropRect,
+    lockAspectRatio,
     setCropRect,
     applyCrop,
     toggleCropMode,
-    lockAspectRatio,
     setLockAspectRatio,
   } = useSvgEditorContext();
 
@@ -225,7 +224,7 @@ export function CropPanel() {
         {/* ヘルプテキスト */}
         <div className="rounded-lg bg-gray-50 p-3 text-xs text-gray-600">
           <p className="mb-2 font-medium">操作方法:</p>
-          <ul className="space-y-1 pl-4 list-disc">
+          <ul className="list-disc space-y-1 pl-4">
             <li>ドラッグで範囲を選択</li>
             <li>範囲内をドラッグで移動</li>
             <li>ハンドルをドラッグでリサイズ</li>

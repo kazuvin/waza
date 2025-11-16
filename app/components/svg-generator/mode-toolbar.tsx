@@ -7,15 +7,15 @@ export function ModeToolbar() {
 
   return (
     <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
-      <div className="border-border bg-card/80 flex items-center gap-1 rounded-lg border p-1 backdrop-blur-2xl">
+      <div className="border-border bg-card/80 flex items-center gap-1 rounded-2xl border p-1 backdrop-blur-2xl">
         {/* カーソルモード */}
         <button
           type="button"
           onClick={() => isCropMode && toggleCropMode()}
-          className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+          className={`flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
             !isCropMode
-              ? "bg-blue-100 text-blue-700"
-              : "text-gray-700 hover:bg-gray-100"
+              ? "bg-primary/20 text-primary"
+              : "hover:bg-card/20 text-gray-700"
           }`}
           aria-label="カーソルモード"
           title="カーソルモード (V)"
@@ -36,10 +36,10 @@ export function ModeToolbar() {
         <button
           type="button"
           onClick={() => !isCropMode && toggleCropMode()}
-          className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+          className={`flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
             isCropMode
-              ? "bg-blue-100 text-blue-700"
-              : "text-gray-700 hover:bg-gray-100"
+              ? "bg-primary/20 text-primary"
+              : "hover:bg-card/20 text-gray-700"
           }`}
           aria-label="クロップモード"
           title="クロップモード (C)"

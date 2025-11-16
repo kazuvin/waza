@@ -8,14 +8,14 @@ export function SvgCanvas() {
   const {
     svgData,
     selectedPathId,
-    setSelectedPathId,
-    zoom,
-    zoomTo,
     isCropMode,
     cropRect,
-    setCropRect,
     originalViewBox,
     lockAspectRatio,
+    zoom,
+    setSelectedPathId,
+    zoomTo,
+    setCropRect,
   } = useSvgEditorContext();
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -66,10 +66,7 @@ export function SvgCanvas() {
   };
 
   // リサイズハンドルのマウスダウン
-  const handleResizeMouseDown = (
-    e: React.MouseEvent,
-    handle: string
-  ) => {
+  const handleResizeMouseDown = (e: React.MouseEvent, handle: string) => {
     if (!cropRect) return;
     e.stopPropagation();
 
@@ -112,7 +109,7 @@ export function SvgCanvas() {
     else if (resizeHandle && initialCropRect) {
       const dx = coords.x - dragStart.x;
       const dy = coords.y - dragStart.y;
-      let newRect = { ...initialCropRect };
+      const newRect = { ...initialCropRect };
 
       // アスペクト比維持モードの場合
       if (lockAspectRatio) {
@@ -124,14 +121,17 @@ export function SvgCanvas() {
             const avgDeltaNW = (dx + dy) / 2;
             newRect.width = initialCropRect.width - avgDeltaNW;
             newRect.height = newRect.width / aspectRatio;
-            newRect.x = initialCropRect.x + (initialCropRect.width - newRect.width);
-            newRect.y = initialCropRect.y + (initialCropRect.height - newRect.height);
+            newRect.x =
+              initialCropRect.x + (initialCropRect.width - newRect.width);
+            newRect.y =
+              initialCropRect.y + (initialCropRect.height - newRect.height);
             break;
           case "ne": // 右上
             const avgDeltaNE = (dx - dy) / 2;
             newRect.width = initialCropRect.width + avgDeltaNE;
             newRect.height = newRect.width / aspectRatio;
-            newRect.y = initialCropRect.y + (initialCropRect.height - newRect.height);
+            newRect.y =
+              initialCropRect.y + (initialCropRect.height - newRect.height);
             break;
           case "se": // 右下
             const avgDeltaSE = (dx + dy) / 2;
@@ -142,7 +142,8 @@ export function SvgCanvas() {
             const avgDeltaSW = (-dx + dy) / 2;
             newRect.width = initialCropRect.width + avgDeltaSW;
             newRect.height = newRect.width / aspectRatio;
-            newRect.x = initialCropRect.x + (initialCropRect.width - newRect.width);
+            newRect.x =
+              initialCropRect.x + (initialCropRect.width - newRect.width);
             break;
         }
       } else {
@@ -189,7 +190,8 @@ export function SvgCanvas() {
       if (newRect.width < 10) {
         newRect.width = 10;
         if (lockAspectRatio) {
-          newRect.height = 10 / (initialCropRect.width / initialCropRect.height);
+          newRect.height =
+            10 / (initialCropRect.width / initialCropRect.height);
         }
         if (resizeHandle.includes("w")) {
           newRect.x = initialCropRect.x + initialCropRect.width - 10;
@@ -291,7 +293,8 @@ export function SvgCanvas() {
                 aria-pressed={isSelected}
                 style={{
                   cursor: isCropMode ? "crosshair" : "pointer",
-                  outline: isSelected && !isCropMode ? "2px solid #3b82f6" : "none",
+                  outline:
+                    isSelected && !isCropMode ? "2px solid #3b82f6" : "none",
                   outlineOffset: "2px",
                   pointerEvents: isCropMode ? "none" : "auto",
                 }}
@@ -373,7 +376,9 @@ export function SvgCanvas() {
                     width={cropRect.width}
                     height={cropRect.height}
                     fill="transparent"
-                    style={{ cursor: isDragging && isMovingCrop ? "grabbing" : "grab" }}
+                    style={{
+                      cursor: isDragging && isMovingCrop ? "grabbing" : "grab",
+                    }}
                     onMouseDown={handleCropRectMouseDown}
                   />
 
@@ -383,20 +388,80 @@ export function SvgCanvas() {
                     // アスペクト比維持モードでは四隅のみ、それ以外は全8方向
                     const handles = lockAspectRatio
                       ? [
-                          { id: "nw", x: cropRect.x, y: cropRect.y, cursor: "nwse-resize" },
-                          { id: "ne", x: cropRect.x + cropRect.width, y: cropRect.y, cursor: "nesw-resize" },
-                          { id: "se", x: cropRect.x + cropRect.width, y: cropRect.y + cropRect.height, cursor: "nwse-resize" },
-                          { id: "sw", x: cropRect.x, y: cropRect.y + cropRect.height, cursor: "nesw-resize" },
+                          {
+                            id: "nw",
+                            x: cropRect.x,
+                            y: cropRect.y,
+                            cursor: "nwse-resize",
+                          },
+                          {
+                            id: "ne",
+                            x: cropRect.x + cropRect.width,
+                            y: cropRect.y,
+                            cursor: "nesw-resize",
+                          },
+                          {
+                            id: "se",
+                            x: cropRect.x + cropRect.width,
+                            y: cropRect.y + cropRect.height,
+                            cursor: "nwse-resize",
+                          },
+                          {
+                            id: "sw",
+                            x: cropRect.x,
+                            y: cropRect.y + cropRect.height,
+                            cursor: "nesw-resize",
+                          },
                         ]
                       : [
-                          { id: "nw", x: cropRect.x, y: cropRect.y, cursor: "nwse-resize" },
-                          { id: "n", x: cropRect.x + cropRect.width / 2, y: cropRect.y, cursor: "ns-resize" },
-                          { id: "ne", x: cropRect.x + cropRect.width, y: cropRect.y, cursor: "nesw-resize" },
-                          { id: "e", x: cropRect.x + cropRect.width, y: cropRect.y + cropRect.height / 2, cursor: "ew-resize" },
-                          { id: "se", x: cropRect.x + cropRect.width, y: cropRect.y + cropRect.height, cursor: "nwse-resize" },
-                          { id: "s", x: cropRect.x + cropRect.width / 2, y: cropRect.y + cropRect.height, cursor: "ns-resize" },
-                          { id: "sw", x: cropRect.x, y: cropRect.y + cropRect.height, cursor: "nesw-resize" },
-                          { id: "w", x: cropRect.x, y: cropRect.y + cropRect.height / 2, cursor: "ew-resize" },
+                          {
+                            id: "nw",
+                            x: cropRect.x,
+                            y: cropRect.y,
+                            cursor: "nwse-resize",
+                          },
+                          {
+                            id: "n",
+                            x: cropRect.x + cropRect.width / 2,
+                            y: cropRect.y,
+                            cursor: "ns-resize",
+                          },
+                          {
+                            id: "ne",
+                            x: cropRect.x + cropRect.width,
+                            y: cropRect.y,
+                            cursor: "nesw-resize",
+                          },
+                          {
+                            id: "e",
+                            x: cropRect.x + cropRect.width,
+                            y: cropRect.y + cropRect.height / 2,
+                            cursor: "ew-resize",
+                          },
+                          {
+                            id: "se",
+                            x: cropRect.x + cropRect.width,
+                            y: cropRect.y + cropRect.height,
+                            cursor: "nwse-resize",
+                          },
+                          {
+                            id: "s",
+                            x: cropRect.x + cropRect.width / 2,
+                            y: cropRect.y + cropRect.height,
+                            cursor: "ns-resize",
+                          },
+                          {
+                            id: "sw",
+                            x: cropRect.x,
+                            y: cropRect.y + cropRect.height,
+                            cursor: "nesw-resize",
+                          },
+                          {
+                            id: "w",
+                            x: cropRect.x,
+                            y: cropRect.y + cropRect.height / 2,
+                            cursor: "ew-resize",
+                          },
                         ];
 
                     return handles.map((handle) => (
