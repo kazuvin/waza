@@ -24,6 +24,14 @@ type SvgEditorContextValue = {
   zoomTo: (level: number) => void;
   zoomToFit: () => void;
   resetZoom: () => void;
+  isCropMode: boolean;
+  cropRect: { x: number; y: number; width: number; height: number } | null;
+  setCropRect: (
+    rect: { x: number; y: number; width: number; height: number } | null
+  ) => void;
+  toggleCropMode: () => void;
+  applyCrop: () => void;
+  originalViewBox: string;
 };
 
 const SvgEditorContext = createContext<SvgEditorContextValue | null>(null);

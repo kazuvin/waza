@@ -78,6 +78,9 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
   // 初期データを取得
   const initialData = parseSvgCode(initialSvgCode);
 
+  // 元のviewBoxを保持（クロップモード時に全体を表示するため）
+  const [originalViewBox] = useState(initialData.viewBox);
+
   // useReducerで履歴管理
   const [history, dispatch] = useReducer(
     svgEditorReducer,
@@ -86,6 +89,13 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
 
   const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
+  const [isCropMode, setIsCropMode] = useState(false);
+  const [cropRect, setCropRect] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
   // 現在のSVGデータ
   const svgData = history.present;
@@ -143,6 +153,29 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
 
   const resetZoom = () => {
     setZoom(DEFAULT_ZOOM);
+  };
+
+  // クロップ操作
+  const toggleCropMode = () => {
+    setIsCropMode(!isCropMode);
+    setCropRect(null);
+    if (!isCropMode) {
+      setSelectedPathId(null); // クロップモードに入る時は選択を解除
+    }
+  };
+
+  const applyCrop = () => {
+    if (!cropRect) return;
+
+    // viewBoxを更新
+    const newViewBox = `${cropRect.x} ${cropRect.y} ${cropRect.width} ${cropRect.height}`;
+    updateCanvas({
+      viewBox: newViewBox,
+    });
+
+    // クロップモードを終了
+    setIsCropMode(false);
+    setCropRect(null);
   };
 
   // キーボードショートカットの設定
@@ -230,5 +263,11 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
     zoomTo,
     zoomToFit,
     resetZoom,
+    isCropMode,
+    cropRect,
+    setCropRect,
+    toggleCropMode,
+    applyCrop,
+    originalViewBox,
   };
 }
