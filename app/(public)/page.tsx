@@ -19,6 +19,7 @@ const sampleSections: Section[] = [
     },
     blocks: [
       {
+        id: "public-hero-container",
         type: BlockType.Container,
         style: {
           display: "flex",
@@ -30,6 +31,7 @@ const sampleSections: Section[] = [
         },
         blocks: [
           {
+            id: "public-hero-heading",
             type: BlockType.Heading,
             level: "h1",
             content: APP_NAME,
@@ -46,6 +48,7 @@ const sampleSections: Section[] = [
             },
           },
           {
+            id: "public-hero-text",
             type: BlockType.Text,
             content: APP_DESCRIPTION,
             style: {
@@ -74,6 +77,7 @@ const sampleSections: Section[] = [
     },
     blocks: [
       {
+        id: "public-features-heading",
         type: BlockType.Heading,
         level: "h2",
         content: "主な機能",
@@ -85,6 +89,7 @@ const sampleSections: Section[] = [
         },
       },
       {
+        id: "public-features-text",
         type: BlockType.Text,
         content:
           "プロフェッショナルなランディングページを作成するために必要なすべての機能",
@@ -96,6 +101,7 @@ const sampleSections: Section[] = [
         },
       },
       {
+        id: "public-feature-card-1",
         type: BlockType.Container,
         style: {
           gridColumn: "span 4 / span 4",
@@ -106,6 +112,7 @@ const sampleSections: Section[] = [
         },
         blocks: [
           {
+            id: "public-feature-1-heading",
             type: BlockType.Heading,
             level: "h3",
             content: "🎨 柔軟なデザイン",
@@ -117,6 +124,7 @@ const sampleSections: Section[] = [
             },
           },
           {
+            id: "public-feature-1-text",
             type: BlockType.Text,
             content:
               "12カラムグリッドシステムで自由自在にレイアウト。レスポンシブデザインに完全対応。",
@@ -127,6 +135,7 @@ const sampleSections: Section[] = [
         ],
       },
       {
+        id: "public-feature-card-2",
         type: BlockType.Container,
         style: {
           gridColumn: "span 4 / span 4",
@@ -137,6 +146,7 @@ const sampleSections: Section[] = [
         },
         blocks: [
           {
+            id: "public-feature-2-heading",
             type: BlockType.Heading,
             level: "h3",
             content: "⚡ 高速パフォーマンス",
@@ -148,6 +158,7 @@ const sampleSections: Section[] = [
             },
           },
           {
+            id: "public-feature-2-text",
             type: BlockType.Text,
             content:
               "Next.jsとReactで構築された最適化されたコード。驚くほど高速な読み込み速度を実現。",
@@ -158,6 +169,7 @@ const sampleSections: Section[] = [
         ],
       },
       {
+        id: "public-feature-card-3",
         type: BlockType.Container,
         style: {
           gridColumn: "span 4 / span 4",
@@ -168,6 +180,7 @@ const sampleSections: Section[] = [
         },
         blocks: [
           {
+            id: "public-feature-3-heading",
             type: BlockType.Heading,
             level: "h3",
             content: "🔧 簡単カスタマイズ",
@@ -179,6 +192,7 @@ const sampleSections: Section[] = [
             },
           },
           {
+            id: "public-feature-3-text",
             type: BlockType.Text,
             content:
               "直感的なUIで色、フォント、スペーシングなどを簡単に調整。コーディング不要。",
@@ -204,6 +218,7 @@ const sampleSections: Section[] = [
     },
     blocks: [
       {
+        id: "public-cta-heading",
         type: BlockType.Heading,
         level: "h2",
         content: "今すぐ始めましょう",
@@ -216,6 +231,7 @@ const sampleSections: Section[] = [
         },
       },
       {
+        id: "public-cta-text",
         type: BlockType.Text,
         content:
           "数千のビジネスが既に使用しています。あなたも今日から美しいランディングページを作成できます。",
@@ -227,6 +243,7 @@ const sampleSections: Section[] = [
         },
       },
       {
+        id: "public-cta-button",
         type: BlockType.Button,
         content: "無料トライアルを開始",
         style: {

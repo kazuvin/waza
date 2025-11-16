@@ -27,6 +27,7 @@ const mockLP: LP = {
       },
       blocks: [
         {
+          id: "hero-container",
           type: BlockType.Container,
           style: {
             display: "flex",
@@ -38,6 +39,7 @@ const mockLP: LP = {
           },
           blocks: [
             {
+              id: "hero-heading",
               type: BlockType.Heading,
               level: "h1",
               content: "Title",
@@ -54,6 +56,7 @@ const mockLP: LP = {
               },
             },
             {
+              id: "hero-text",
               type: BlockType.Text,
               content: "description",
               style: {
@@ -82,6 +85,7 @@ const mockLP: LP = {
       },
       blocks: [
         {
+          id: "features-heading",
           type: BlockType.Heading,
           level: "h2",
           content: "主な機能",
@@ -93,6 +97,7 @@ const mockLP: LP = {
           },
         },
         {
+          id: "features-text",
           type: BlockType.Text,
           content:
             "プロフェッショナルなランディングページを作成するために必要なすべての機能",
@@ -104,6 +109,7 @@ const mockLP: LP = {
           },
         },
         {
+          id: "feature-card-1",
           type: BlockType.Container,
           style: {
             gridColumn: "span 4 / span 4",
@@ -114,6 +120,7 @@ const mockLP: LP = {
           },
           blocks: [
             {
+              id: "feature-1-heading",
               type: BlockType.Heading,
               level: "h3",
               content: "🎨 柔軟なデザイン",
@@ -125,6 +132,7 @@ const mockLP: LP = {
               },
             },
             {
+              id: "feature-1-text",
               type: BlockType.Text,
               content:
                 "12カラムグリッドシステムで自由自在にレイアウト。レスポンシブデザインに完全対応。",
@@ -135,6 +143,7 @@ const mockLP: LP = {
           ],
         },
         {
+          id: "feature-card-2",
           type: BlockType.Container,
           style: {
             gridColumn: "span 4 / span 4",
@@ -145,6 +154,7 @@ const mockLP: LP = {
           },
           blocks: [
             {
+              id: "feature-2-heading",
               type: BlockType.Heading,
               level: "h3",
               content: "⚡ 高速パフォーマンス",
@@ -156,6 +166,7 @@ const mockLP: LP = {
               },
             },
             {
+              id: "feature-2-text",
               type: BlockType.Text,
               content:
                 "Next.jsとReactで構築された最適化されたコード。驚くほど高速な読み込み速度を実現。",
@@ -166,6 +177,7 @@ const mockLP: LP = {
           ],
         },
         {
+          id: "feature-card-3",
           type: BlockType.Container,
           style: {
             gridColumn: "span 4 / span 4",
@@ -176,6 +188,7 @@ const mockLP: LP = {
           },
           blocks: [
             {
+              id: "feature-3-heading",
               type: BlockType.Heading,
               level: "h3",
               content: "🔧 簡単カスタマイズ",
@@ -187,6 +200,7 @@ const mockLP: LP = {
               },
             },
             {
+              id: "feature-3-text",
               type: BlockType.Text,
               content:
                 "直感的なUIで色、フォント、スペーシングなどを簡単に調整。コーディング不要。",
@@ -212,6 +226,7 @@ const mockLP: LP = {
       },
       blocks: [
         {
+          id: "cta-heading",
           type: BlockType.Heading,
           level: "h2",
           content: "今すぐ始めましょう",
@@ -224,6 +239,7 @@ const mockLP: LP = {
           },
         },
         {
+          id: "cta-text",
           type: BlockType.Text,
           content:
             "数千のビジネスが既に使用しています。あなたも今日から美しいランディングページを作成できます。",
@@ -235,6 +251,7 @@ const mockLP: LP = {
           },
         },
         {
+          id: "cta-button",
           type: BlockType.Button,
           content: "無料トライアルを開始",
           style: {
