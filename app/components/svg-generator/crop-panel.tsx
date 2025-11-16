@@ -21,11 +21,6 @@ export function CropPanel() {
   const originalWidth = Math.round(originalParts[2]);
   const originalHeight = Math.round(originalParts[3]);
 
-  // 現在のviewBoxのサイズを取得
-  const currentParts = svgData.viewBox.split(" ").map(Number);
-  const currentWidth = Math.round(currentParts[2]);
-  const currentHeight = Math.round(currentParts[3]);
-
   // クロップ範囲の値を更新
   const handleCropChange = (
     field: "x" | "y" | "width" | "height",
@@ -82,23 +77,12 @@ export function CropPanel() {
     <RightPanel title="クロップ設定">
       <div className="space-y-6 py-3">
         {/* サイズ情報 */}
-        <div className="space-y-3">
-          <div className="rounded-lg bg-gray-50 p-3">
-            <div className="mb-2 text-xs font-medium text-gray-600">
-              元のサイズ
-            </div>
-            <div className="font-mono text-sm font-semibold text-gray-900">
-              {originalWidth} × {originalHeight} px
-            </div>
+        <div className="rounded-lg bg-gray-50 p-3">
+          <div className="mb-2 text-xs font-medium text-gray-600">
+            元のサイズ
           </div>
-
-          <div className="rounded-lg bg-green-50 p-3">
-            <div className="mb-2 text-xs font-medium text-green-700">
-              現在のクロップ
-            </div>
-            <div className="font-mono text-sm font-semibold text-green-800">
-              {currentWidth} × {currentHeight} px
-            </div>
+          <div className="font-mono text-sm font-semibold text-gray-900">
+            {originalWidth} × {originalHeight} px
           </div>
         </div>
 
@@ -106,7 +90,7 @@ export function CropPanel() {
         {cropRect ? (
           <fieldset className="space-y-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
             <legend className="px-2 text-sm font-semibold text-blue-900">
-              新しいクロップ範囲
+              クロップ範囲
             </legend>
 
             {/* アスペクト比維持チェックボックス */}
@@ -215,15 +199,7 @@ export function CropPanel() {
               </div>
             </div>
           </fieldset>
-        ) : (
-          <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
-            <p className="text-sm text-gray-600">
-              キャンバス上でドラッグして
-              <br />
-              クロップ範囲を選択してください
-            </p>
-          </div>
-        )}
+        ) : null}
 
         {/* アクションボタン */}
         <div className="space-y-2 pt-2">

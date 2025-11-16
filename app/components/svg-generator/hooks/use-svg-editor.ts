@@ -158,11 +158,27 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
 
   // クロップ操作
   const toggleCropMode = () => {
-    setIsCropMode(!isCropMode);
-    setCropRect(null);
+    const newCropMode = !isCropMode;
+    setIsCropMode(newCropMode);
     setLockAspectRatio(false);
-    if (!isCropMode) {
-      setSelectedPathId(null); // クロップモードに入る時は選択を解除
+
+    if (newCropMode) {
+      // クロップモードに入る時
+      setSelectedPathId(null); // 選択を解除
+
+      // 元のviewBoxと現在のviewBoxを比較
+      // 異なる場合は既にクロップされているので、現在の範囲を初期値とする
+      if (svgData.viewBox !== originalViewBox) {
+        const viewBoxParts = svgData.viewBox.split(" ").map(Number);
+        const [x, y, width, height] = viewBoxParts;
+        setCropRect({ x, y, width, height });
+      } else {
+        // 元のviewBoxと同じ場合は、ユーザーがドラッグで作成する
+        setCropRect(null);
+      }
+    } else {
+      // クロップモード終了時
+      setCropRect(null);
     }
   };
 
