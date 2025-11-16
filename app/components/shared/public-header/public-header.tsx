@@ -21,6 +21,9 @@ export function PublicHeader({ className, ...props }: ComponentProps<"div">) {
           <ul className="flex items-center gap-4 text-sm">
             <Link href="/dashboard">ダッシュボード</Link>
           </ul>
+          <ul className="flex items-center gap-4 text-sm">
+            <Link href="/svg/hoge">SVG</Link>
+          </ul>
         </nav>
         <CommandSearch />
       </div>
