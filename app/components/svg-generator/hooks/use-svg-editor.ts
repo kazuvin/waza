@@ -247,6 +247,28 @@ export function useSvgEditor({ initialSvgCode = "" }: UseSvgEditorProps) {
     }
   );
 
+  // Vキーでカーソルモード
+  useKeyboardShortcut(
+    {
+      key: "v",
+      enabled: isCropMode,
+    },
+    () => {
+      toggleCropMode();
+    }
+  );
+
+  // Cキーでクロップモード
+  useKeyboardShortcut(
+    {
+      key: "c",
+      enabled: !isCropMode,
+    },
+    () => {
+      toggleCropMode();
+    }
+  );
+
   return {
     svgData,
     selectedPathId,

@@ -42,6 +42,7 @@ import { PathList } from "./path-list";
 import { PropertiesPanel } from "./properties-panel";
 import { CropPanel } from "./crop-panel";
 import { SvgCanvas } from "./svg-canvas";
+import { ModeToolbar } from "./mode-toolbar";
 import {
   SvgEditorProvider,
   useSvgEditorContext,
@@ -100,6 +101,7 @@ function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
           className="h-full overflow-auto"
         >
           <SvgCanvas />
+          <ModeToolbar />
         </main>
 
         <aside

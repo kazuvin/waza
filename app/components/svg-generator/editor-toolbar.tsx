@@ -31,7 +31,6 @@ export function EditorToolbar({ onSave }: EditorToolbarProps) {
     zoomOut,
     zoomTo,
     isCropMode,
-    toggleCropMode,
   } = useSvgEditorContext();
 
   const [isZoomInputFocused, setIsZoomInputFocused] = useState(false);
@@ -152,20 +151,6 @@ export function EditorToolbar({ onSave }: EditorToolbarProps) {
         >
           Redo
         </Button>
-
-        {/* クロップボタン */}
-        {!isCropMode && (
-          <Button
-            type="button"
-            onClick={toggleCropMode}
-            variant="outline"
-            size="sm"
-            aria-label="クロップ"
-            title="クロップ"
-          >
-            クロップ
-          </Button>
-        )}
 
         <Button
           type="button"
