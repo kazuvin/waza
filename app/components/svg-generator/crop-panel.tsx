@@ -73,7 +73,30 @@ export function CropPanel() {
   };
 
   return (
-    <RightPanel title="クロップ設定">
+    <RightPanel
+      title="クロップ設定"
+      footer={
+        <div className="space-y-2">
+          <Button
+            type="button"
+            onClick={applyCrop}
+            disabled={!cropRect}
+            variant="default"
+            className="w-full"
+          >
+            適用
+          </Button>
+          <Button
+            type="button"
+            onClick={toggleCropMode}
+            variant="outline"
+            className="w-full"
+          >
+            キャンセル
+          </Button>
+        </div>
+      }
+    >
       <div className="space-y-6 py-3">
         {/* サイズ情報 */}
         <div className="rounded-lg bg-gray-50 p-3">
@@ -199,27 +222,6 @@ export function CropPanel() {
             </div>
           </fieldset>
         ) : null}
-
-        {/* アクションボタン */}
-        <div className="space-y-2 pt-2">
-          <Button
-            type="button"
-            onClick={applyCrop}
-            disabled={!cropRect}
-            variant="default"
-            className="w-full"
-          >
-            適用
-          </Button>
-          <Button
-            type="button"
-            onClick={toggleCropMode}
-            variant="outline"
-            className="w-full"
-          >
-            キャンセル
-          </Button>
-        </div>
 
         {/* ヘルプテキスト */}
         <div className="rounded-lg bg-gray-50 p-3 text-xs text-gray-600">

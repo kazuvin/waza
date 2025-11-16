@@ -363,7 +363,7 @@ export function SvgCanvas() {
                     width={cropRect.width}
                     height={cropRect.height}
                     fill="none"
-                    stroke="#3b82f6"
+                    stroke="var(--color-primary)"
                     strokeWidth={2 / zoom}
                     strokeDasharray={`${4 / zoom} ${4 / zoom}`}
                     pointerEvents="none"
@@ -384,7 +384,7 @@ export function SvgCanvas() {
 
                   {/* リサイズハンドル */}
                   {(() => {
-                    const handleSize = 8 / zoom;
+                    const handleSize = 12 / zoom;
                     // アスペクト比維持モードでは四隅のみ、それ以外は全8方向
                     const handles = lockAspectRatio
                       ? [
@@ -472,7 +472,7 @@ export function SvgCanvas() {
                         width={handleSize}
                         height={handleSize}
                         fill="white"
-                        stroke="#3b82f6"
+                        stroke="var(--color-primary)"
                         strokeWidth={1.5 / zoom}
                         style={{ cursor: handle.cursor }}
                         onMouseDown={(e) => handleResizeMouseDown(e, handle.id)}

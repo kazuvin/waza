@@ -76,49 +76,47 @@ export function PathList() {
               key={path.id}
               ref={isSelected ? selectedItemRef : null}
               onClick={() => handlePathClick(path.id)}
-              className={`border-border cursor-pointer border-b p-3 transition-colors hover:bg-gray-100 ${
-                isSelected
-                  ? "border-l-4 border-l-blue-500 bg-blue-50"
-                  : "border-l-4 border-l-transparent"
+              className={`border-border m-1 cursor-pointer rounded-2xl border-b p-3 transition-colors ${
+                isSelected ? "bg-primary/20" : "hover:bg-muted"
               }`}
             >
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-700">
-                パス {index + 1}
-              </span>
-              {isSelected && (
-                <span className="rounded bg-blue-500 p-0.5 text-xs text-white">
-                  選択中
+              <div className="mb-1 flex h-6 items-center justify-between">
+                <span className="text-xs font-semibold text-gray-700">
+                  パス {index + 1}
                 </span>
-              )}
-            </div>
+                {isSelected && (
+                  <span className="bg-primary text-primary-foreground rounded p-0.5 px-1 text-xs">
+                    選択中
+                  </span>
+                )}
+              </div>
 
-            <div className="mb-2 flex items-center gap-2">
-              <div
-                className="h-4 w-4 rounded border border-gray-300"
-                style={{ backgroundColor: path.fill }}
-                title={`fill: ${path.fill}`}
-              />
-              <span className="text-xs text-gray-600">{path.fill}</span>
-            </div>
-
-            {path.stroke && path.stroke !== "none" && (
               <div className="mb-2 flex items-center gap-2">
                 <div
-                  className="h-4 w-4 rounded border"
-                  style={{ backgroundColor: path.stroke }}
-                  title={`stroke: ${path.stroke}`}
+                  className="h-4 w-4 rounded border border-gray-300"
+                  style={{ backgroundColor: path.fill }}
+                  title={`fill: ${path.fill}`}
                 />
-                <span className="text-xs text-gray-600">
-                  {path.stroke} ({path.strokeWidth}px)
-                </span>
+                <span className="text-xs text-gray-600">{path.fill}</span>
               </div>
-            )}
 
-            <div className="font-mono text-xs text-gray-400">
-              {getPathPreview(path)}
+              {path.stroke && path.stroke !== "none" && (
+                <div className="mb-2 flex items-center gap-2">
+                  <div
+                    className="h-4 w-4 rounded border"
+                    style={{ backgroundColor: path.stroke }}
+                    title={`stroke: ${path.stroke}`}
+                  />
+                  <span className="text-xs text-gray-600">
+                    {path.stroke} ({path.strokeWidth}px)
+                  </span>
+                </div>
+              )}
+
+              <div className="font-mono text-xs text-gray-400">
+                {getPathPreview(path)}
+              </div>
             </div>
-          </div>
           );
         })}
       </div>
