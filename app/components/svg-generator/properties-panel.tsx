@@ -12,16 +12,19 @@ export function PropertiesPanel() {
     deletePath,
   } = useSvgEditorContext();
   return (
-    <div className="p-4">
-      <h2 className="mb-4 text-lg font-semibold">プロパティ</h2>
+    <div className="bg-card border-border flex h-3/4 flex-col overflow-hidden rounded-2xl border">
+      <div className="border-border shrink-0 border-b p-3">
+        <h2 className="text-sm font-semibold">プロパティ</h2>
+      </div>
 
       <form
         onSubmit={(e) => e.preventDefault()}
         aria-label="プロパティフォーム"
+        className="overflow-y-auto px-3"
       >
         {/* キャンバス設定 */}
-        <fieldset className="mb-6 space-y-4 border-b pb-6">
-          <legend className="mb-2 text-sm font-medium">キャンバス設定</legend>
+        <fieldset className="border-border mb-6 space-y-4 border-b pt-3 pb-6">
+          <legend className="text-sm font-medium">キャンバス設定</legend>
 
           <div>
             <label htmlFor="canvas-width" className="block text-sm font-medium">
@@ -31,9 +34,7 @@ export function PropertiesPanel() {
               id="canvas-width"
               type="number"
               value={svgData.width}
-              onChange={(e) =>
-                updateCanvas({ width: Number(e.target.value) })
-              }
+              onChange={(e) => updateCanvas({ width: Number(e.target.value) })}
               className="mt-1 w-full rounded border px-3 py-2 text-sm"
               aria-label="キャンバスの幅"
             />
@@ -50,9 +51,7 @@ export function PropertiesPanel() {
               id="canvas-height"
               type="number"
               value={svgData.height}
-              onChange={(e) =>
-                updateCanvas({ height: Number(e.target.value) })
-              }
+              onChange={(e) => updateCanvas({ height: Number(e.target.value) })}
               className="mt-1 w-full rounded border px-3 py-2 text-sm"
               aria-label="キャンバスの高さ"
             />
@@ -78,14 +77,14 @@ export function PropertiesPanel() {
 
         {/* パス設定 */}
         {selectedPath ? (
-          <fieldset className="space-y-4">
+          <fieldset className="space-y-4 pb-3">
             <div className="mb-4 flex items-center justify-between">
               <legend className="text-sm font-medium">選択中のパス</legend>
               {selectedPathId && (
                 <button
                   type="button"
                   onClick={() => deletePath(selectedPathId)}
-                  className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
                   aria-label="選択中のパスを削除"
                 >
                   削除

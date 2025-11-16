@@ -15,7 +15,7 @@ export function SvgCanvas() {
   return (
     <div
       ref={containerRef}
-      className="flex h-full items-center justify-center overflow-auto bg-gray-50 p-8"
+      className="grid size-full place-items-center overflow-auto bg-gray-50 p-8"
     >
       <div
         style={{
@@ -33,38 +33,38 @@ export function SvgCanvas() {
           aria-label="SVGキャンバス"
           onClick={() => setSelectedPathId(null)}
         >
-        <title>SVG編集キャンバス</title>
-        <desc>
-          {svgData.paths.length > 0
-            ? `${svgData.paths.length}個のパスを含むSVGキャンバス`
-            : "空のSVGキャンバス"}
-        </desc>
+          <title>SVG編集キャンバス</title>
+          <desc>
+            {svgData.paths.length > 0
+              ? `${svgData.paths.length}個のパスを含むSVGキャンバス`
+              : "空のSVGキャンバス"}
+          </desc>
 
-        {svgData.paths.map((path) => {
-          const isSelected = path.id === selectedPathId;
-          return (
-            <path
-              key={path.id}
-              d={path.d}
-              fill={path.fill}
-              stroke={path.stroke}
-              strokeWidth={path.strokeWidth}
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                setSelectedPathId(path.id);
-              }}
-              tabIndex={0}
-              role="button"
-              aria-label={`パス要素 ${path.id}`}
-              aria-pressed={isSelected}
-              style={{
-                cursor: "pointer",
-                outline: isSelected ? "2px solid #3b82f6" : "none",
-                outlineOffset: "2px",
-              }}
-            />
-          );
-        })}
+          {svgData.paths.map((path) => {
+            const isSelected = path.id === selectedPathId;
+            return (
+              <path
+                key={path.id}
+                d={path.d}
+                fill={path.fill}
+                stroke={path.stroke}
+                strokeWidth={path.strokeWidth}
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  setSelectedPathId(path.id);
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label={`パス要素 ${path.id}`}
+                aria-pressed={isSelected}
+                style={{
+                  cursor: "pointer",
+                  outline: isSelected ? "2px solid #3b82f6" : "none",
+                  outlineOffset: "2px",
+                }}
+              />
+            );
+          })}
         </svg>
       </div>
     </div>

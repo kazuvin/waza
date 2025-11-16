@@ -38,6 +38,7 @@ const sampleSvg = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="
 </svg>`;
 
 import { EditorToolbar } from "./editor-toolbar";
+import { PathList } from "./path-list";
 import { PropertiesPanel } from "./properties-panel";
 import { SvgCanvas } from "./svg-canvas";
 import {
@@ -91,17 +92,25 @@ function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
     <div className="flex h-screen flex-col">
       <EditorToolbar onSave={handleSave} />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="relative flex-1 overflow-hidden">
         <main
-          className="flex-1 overflow-auto"
           role="main"
           aria-label="SVG編集キャンバス"
+          className="h-full overflow-auto"
         >
           <SvgCanvas />
         </main>
 
         <aside
-          className="w-80 overflow-y-auto border-l"
+          className="absolute top-2 left-2 h-full w-64"
+          role="complementary"
+          aria-label="パス一覧"
+        >
+          <PathList />
+        </aside>
+
+        <aside
+          className="absolute top-2 right-2 h-full w-80"
           role="complementary"
           aria-label="プロパティパネル"
         >
