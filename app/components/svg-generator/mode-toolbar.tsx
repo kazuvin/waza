@@ -1,5 +1,6 @@
 "use client";
 
+import { ButtonGroup, ButtonGroupItem } from "@/app/components/ui";
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
 
 export function ModeToolbar() {
@@ -7,16 +8,11 @@ export function ModeToolbar() {
 
   return (
     <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
-      <div className="border-border bg-card/80 flex items-center gap-1 rounded-2xl border p-1 backdrop-blur-2xl">
+      <ButtonGroup>
         {/* カーソルモード */}
-        <button
-          type="button"
+        <ButtonGroupItem
           onClick={() => isCropMode && toggleCropMode()}
-          className={`flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
-            !isCropMode
-              ? "bg-primary/20 text-primary"
-              : "hover:bg-card/20 text-gray-700"
-          }`}
+          active={!isCropMode}
           aria-label="カーソルモード"
           title="カーソルモード (V)"
         >
@@ -30,17 +26,12 @@ export function ModeToolbar() {
             <path d="M3 3L13 8L8 9L6 14L3 3Z" fill="currentColor" />
           </svg>
           <span>カーソル</span>
-        </button>
+        </ButtonGroupItem>
 
         {/* クロップモード */}
-        <button
-          type="button"
+        <ButtonGroupItem
           onClick={() => !isCropMode && toggleCropMode()}
-          className={`flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
-            isCropMode
-              ? "bg-primary/20 text-primary"
-              : "hover:bg-card/20 text-gray-700"
-          }`}
+          active={isCropMode}
           aria-label="クロップモード"
           title="クロップモード (C)"
         >
@@ -57,8 +48,8 @@ export function ModeToolbar() {
             />
           </svg>
           <span>クロップ</span>
-        </button>
-      </div>
+        </ButtonGroupItem>
+      </ButtonGroup>
     </div>
   );
 }

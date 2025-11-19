@@ -59,7 +59,7 @@ export function PathList() {
   });
 
   return (
-    <div className="border-border bg-card/80 rounded-2xl border backdrop-blur-2xl">
+    <div className="bg-card/80 rounded-2xl border border-white backdrop-blur-2xl">
       <div className="border-border border-b p-3">
         <h2 className="text-sm font-semibold">パス一覧</h2>
         <p className="text-xs text-gray-500">{svgData.paths.length}個のパス</p>
@@ -77,7 +77,7 @@ export function PathList() {
               ref={isSelected ? selectedItemRef : null}
               onClick={() => handlePathClick(path.id)}
               className={`border-border m-1 cursor-pointer rounded-2xl border-b p-3 transition-colors ${
-                isSelected ? "bg-primary/20" : "hover:bg-muted"
+                isSelected ? "bg-primary/20" : "hover:bg-primary/5"
               }`}
             >
               <div className="mb-1 flex h-6 items-center justify-between">

@@ -1,5 +1,6 @@
 "use client";
 
+import { Input, NumberInput, Textarea } from "@/app/components/ui";
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
 import { RightPanel } from "./right-panel";
 
@@ -26,12 +27,11 @@ export function PropertiesPanel() {
             <label htmlFor="canvas-width" className="block text-sm font-medium">
               幅
             </label>
-            <input
+            <NumberInput
               id="canvas-width"
-              type="number"
               value={svgData.width}
-              onChange={(e) => updateCanvas({ width: Number(e.target.value) })}
-              className="mt-1 w-full rounded border px-3 py-2 text-sm"
+              onChange={(value) => updateCanvas({ width: value || 0 })}
+              className="mt-1"
               aria-label="キャンバスの幅"
             />
           </div>
@@ -43,12 +43,11 @@ export function PropertiesPanel() {
             >
               高さ
             </label>
-            <input
+            <NumberInput
               id="canvas-height"
-              type="number"
               value={svgData.height}
-              onChange={(e) => updateCanvas({ height: Number(e.target.value) })}
-              className="mt-1 w-full rounded border px-3 py-2 text-sm"
+              onChange={(value) => updateCanvas({ height: value || 0 })}
+              className="mt-1"
               aria-label="キャンバスの高さ"
             />
           </div>
@@ -60,12 +59,12 @@ export function PropertiesPanel() {
             >
               ViewBox
             </label>
-            <input
+            <Input
               id="canvas-viewbox"
               type="text"
               value={svgData.viewBox}
               onChange={(e) => updateCanvas({ viewBox: e.target.value })}
-              className="mt-1 w-full rounded border px-3 py-2 text-sm"
+              className="mt-1"
               aria-label="ViewBox属性"
             />
           </div>
@@ -92,14 +91,14 @@ export function PropertiesPanel() {
               <label htmlFor="path-d" className="block text-sm font-medium">
                 d属性（パス定義）
               </label>
-              <textarea
+              <Textarea
                 id="path-d"
                 value={selectedPath.d}
                 onChange={(e) =>
                   updatePath(selectedPath.id, { d: e.target.value })
                 }
                 rows={4}
-                className="mt-1 w-full rounded border px-3 py-2 font-mono text-sm"
+                className="mt-1 font-mono"
                 aria-label="パスのd属性"
               />
             </div>
@@ -170,18 +169,17 @@ export function PropertiesPanel() {
               >
                 線の太さ
               </label>
-              <input
+              <NumberInput
                 id="path-stroke-width"
-                type="number"
                 value={selectedPath.strokeWidth}
-                onChange={(e) =>
+                onChange={(value) =>
                   updatePath(selectedPath.id, {
-                    strokeWidth: Number(e.target.value),
+                    strokeWidth: value || 0,
                   })
                 }
-                min="0"
-                step="0.5"
-                className="mt-1 w-full rounded border px-3 py-2 text-sm"
+                allowDecimal
+                decimalPlaces={1}
+                className="mt-1"
                 aria-label="線の太さの値"
               />
             </div>

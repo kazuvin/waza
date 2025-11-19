@@ -1,3 +1,5 @@
+"use client";
+
 import { Section } from "../schemas";
 import { SectionComponent } from "../section";
 

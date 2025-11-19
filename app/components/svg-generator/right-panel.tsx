@@ -8,7 +8,7 @@ type RightPanelProps = {
 
 export function RightPanel({ title, children, footer }: RightPanelProps) {
   return (
-    <div className="bg-card/80 border-border flex h-3/4 flex-col overflow-hidden rounded-2xl border backdrop-blur-2xl">
+    <div className="bg-card/80 flex h-3/4 flex-col overflow-hidden rounded-2xl border border-white backdrop-blur-2xl">
       <div className="border-border shrink-0 border-b p-3">
         <h2 className="text-sm font-semibold">{title}</h2>
       </div>

@@ -1,2 +1,2 @@
 export * from "./button";
-export * from "./variants";
+export * as buttonVariants from "./variants";
