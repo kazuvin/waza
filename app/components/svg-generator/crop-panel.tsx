@@ -1,5 +1,6 @@
 "use client";
 
+import { NumberInput } from "@/app/components/ui";
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
 import { RightPanel } from "./right-panel";
 import { Button } from "@/app/components/ui/button/button";
@@ -23,19 +24,16 @@ export function CropPanel() {
   // クロップ範囲の値を更新
   const handleCropChange = (
     field: "x" | "y" | "width" | "height",
-    value: string
+    value: number | undefined
   ) => {
-    if (!cropRect) return;
-
-    const numValue = Number(value);
-    if (isNaN(numValue)) return;
+    if (!cropRect || value === undefined) return;
 
     // アスペクト比を維持する場合
     if (lockAspectRatio && (field === "width" || field === "height")) {
       const aspectRatio = cropRect.width / cropRect.height;
 
       if (field === "width") {
-        const newWidth = Math.max(10, numValue);
+        const newWidth = Math.max(10, value);
         const newHeight = newWidth / aspectRatio;
         setCropRect({
           ...cropRect,
@@ -43,7 +41,7 @@ export function CropPanel() {
           height: newHeight,
         });
       } else {
-        const newHeight = Math.max(10, numValue);
+        const newHeight = Math.max(10, value);
         const newWidth = newHeight * aspectRatio;
         setCropRect({
           ...cropRect,
@@ -54,7 +52,7 @@ export function CropPanel() {
     } else {
       setCropRect({
         ...cropRect,
-        [field]: numValue,
+        [field]: value,
       });
     }
   };
@@ -151,13 +149,11 @@ export function CropPanel() {
                 >
                   X座標
                 </label>
-                <input
+                <NumberInput
                   id="crop-x"
-                  type="number"
                   value={Math.round(cropRect.x)}
-                  onChange={(e) => handleCropChange("x", e.target.value)}
-                  className="mt-1 w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
-                  step="1"
+                  onChange={(value) => handleCropChange("x", value)}
+                  className="mt-1"
                 />
               </div>
 
@@ -168,13 +164,11 @@ export function CropPanel() {
                 >
                   Y座標
                 </label>
-                <input
+                <NumberInput
                   id="crop-y"
-                  type="number"
                   value={Math.round(cropRect.y)}
-                  onChange={(e) => handleCropChange("y", e.target.value)}
-                  className="mt-1 w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
-                  step="1"
+                  onChange={(value) => handleCropChange("y", value)}
+                  className="mt-1"
                 />
               </div>
 
@@ -185,14 +179,11 @@ export function CropPanel() {
                 >
                   幅
                 </label>
-                <input
+                <NumberInput
                   id="crop-width"
-                  type="number"
                   value={Math.round(cropRect.width)}
-                  onChange={(e) => handleCropChange("width", e.target.value)}
-                  className="mt-1 w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
-                  min="10"
-                  step="1"
+                  onChange={(value) => handleCropChange("width", value)}
+                  className="mt-1"
                 />
               </div>
 
@@ -203,14 +194,11 @@ export function CropPanel() {
                 >
                   高さ
                 </label>
-                <input
+                <NumberInput
                   id="crop-height"
-                  type="number"
                   value={Math.round(cropRect.height)}
-                  onChange={(e) => handleCropChange("height", e.target.value)}
-                  className="mt-1 w-full rounded border border-gray-300 px-2 py-1.5 text-sm"
-                  min="10"
-                  step="1"
+                  onChange={(value) => handleCropChange("height", value)}
+                  className="mt-1"
                 />
               </div>
             </div>
