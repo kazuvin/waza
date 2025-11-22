@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from "@/app/components/ui/button/button";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { useSvgEditorSnapshot } from "./store";
 
 type EditorToolbarProps = {
   onSave: () => void;
 };
 
 export function EditorToolbar({ onSave }: EditorToolbarProps) {
-  const { isCropMode } = useSvgEditorContext();
+  const { isCropMode } = useSvgEditorSnapshot();
 
   return (
     <header

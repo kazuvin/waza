@@ -43,10 +43,8 @@ import { SvgCanvas } from "./svg-canvas";
 import { ModeToolbar } from "./mode-toolbar";
 import { ZoomToolbar } from "./zoom-toolbar";
 import { HistoryToolbar } from "./history-toolbar";
-import {
-  SvgEditorProvider,
-  useSvgEditorContext,
-} from "./contexts/svg-editor-context";
+import { svgEditorActions, useSvgEditorSnapshot } from "./store";
+import { KeyboardShortcuts } from "./keyboard-shortcuts";
 import { generateSvgCode } from "./utils/svg-parser";
 
 export type PathElement = {
@@ -75,18 +73,23 @@ export function SvgEditor({
   initialSvgCode = sampleSvg,
   onSave,
 }: SvgEditorProps) {
+  // ストアを初期化
+  svgEditorActions.initialize(initialSvgCode);
+
   return (
-    <SvgEditorProvider initialSvgCode={initialSvgCode}>
+    <>
+      <KeyboardShortcuts />
       <SvgEditorContent onSave={onSave} />
-    </SvgEditorProvider>
+    </>
   );
 }
 
 function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
-  const { svgData } = useSvgEditorContext();
+  const snapshot = useSvgEditorSnapshot();
+  const svgData = snapshot.history.present;
 
   const handleSave = () => {
-    const svgCode = generateSvgCode(svgData);
+    const svgCode = generateSvgCode(svgData as SvgData);
     onSave?.(svgCode);
   };
 

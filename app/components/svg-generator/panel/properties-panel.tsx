@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, NumberInput, Textarea } from "@/app/components/ui";
-import { useSvgEditorContext } from "../contexts/svg-editor-context";
+import { svgEditorActions, useSvgEditorSnapshot } from "../store";
 import {
   Panel,
   PanelProps,
@@ -19,14 +19,10 @@ export function PropertiesPanel({
   headingLevel = "h2",
   ...props
 }: PropertiesPanelProps) {
-  const {
-    svgData,
-    selectedPath,
-    selectedPathId,
-    updatePath,
-    updateCanvas,
-    deletePath,
-  } = useSvgEditorContext();
+  const snapshot = useSvgEditorSnapshot();
+  const svgData = snapshot.history.present;
+  const selectedPathId = snapshot.selectedPathId;
+  const selectedPath = svgData.paths.find((p) => p.id === selectedPathId);
   return (
     <Panel {...props}>
       <PanelHeader>
@@ -51,7 +47,7 @@ export function PropertiesPanel({
               <NumberInput
                 id="canvas-width"
                 value={svgData.width}
-                onChange={(value) => updateCanvas({ width: value || 0 })}
+                onChange={(value) => svgEditorActions.updateCanvas({ width: value || 0 })}
                 className="mt-1"
                 aria-label="キャンバスの幅"
               />
@@ -67,7 +63,7 @@ export function PropertiesPanel({
               <NumberInput
                 id="canvas-height"
                 value={svgData.height}
-                onChange={(value) => updateCanvas({ height: value || 0 })}
+                onChange={(value) => svgEditorActions.updateCanvas({ height: value || 0 })}
                 className="mt-1"
                 aria-label="キャンバスの高さ"
               />
@@ -84,7 +80,9 @@ export function PropertiesPanel({
                 id="canvas-viewbox"
                 type="text"
                 value={svgData.viewBox}
-                onChange={(e) => updateCanvas({ viewBox: e.target.value })}
+                onChange={(e) =>
+                  svgEditorActions.updateCanvas({ viewBox: e.target.value })
+                }
                 className="mt-1"
                 aria-label="ViewBox属性"
               />
@@ -99,7 +97,7 @@ export function PropertiesPanel({
                 {selectedPathId && (
                   <button
                     type="button"
-                    onClick={() => deletePath(selectedPathId)}
+                    onClick={() => svgEditorActions.deletePath(selectedPathId)}
                     className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
                     aria-label="選択中のパスを削除"
                   >
@@ -116,7 +114,7 @@ export function PropertiesPanel({
                   id="path-d"
                   value={selectedPath.d}
                   onChange={(e) =>
-                    updatePath(selectedPath.id, { d: e.target.value })
+                    svgEditorActions.updatePath(selectedPath.id, { d: e.target.value })
                   }
                   rows={4}
                   className="mt-1 font-mono"
@@ -136,7 +134,7 @@ export function PropertiesPanel({
                   type="text"
                   value={selectedPath.fill}
                   onChange={(e) =>
-                    updatePath(selectedPath.id, { fill: e.target.value })
+                    svgEditorActions.updatePath(selectedPath.id, { fill: e.target.value })
                   }
                   className="mt-1 w-full rounded border px-3 py-2 text-sm"
                   aria-label="塗りつぶし色"
@@ -147,7 +145,7 @@ export function PropertiesPanel({
                     selectedPath.fill === "none" ? "#000000" : selectedPath.fill
                   }
                   onChange={(e) =>
-                    updatePath(selectedPath.id, { fill: e.target.value })
+                    svgEditorActions.updatePath(selectedPath.id, { fill: e.target.value })
                   }
                   className="mt-2 h-10 w-full rounded border"
                   aria-label="塗りつぶし色の選択"
@@ -166,7 +164,7 @@ export function PropertiesPanel({
                   type="text"
                   value={selectedPath.stroke}
                   onChange={(e) =>
-                    updatePath(selectedPath.id, { stroke: e.target.value })
+                    svgEditorActions.updatePath(selectedPath.id, { stroke: e.target.value })
                   }
                   className="mt-1 w-full rounded border px-3 py-2 text-sm"
                   aria-label="線の色"
@@ -179,7 +177,7 @@ export function PropertiesPanel({
                       : selectedPath.stroke
                   }
                   onChange={(e) =>
-                    updatePath(selectedPath.id, { stroke: e.target.value })
+                    svgEditorActions.updatePath(selectedPath.id, { stroke: e.target.value })
                   }
                   className="mt-2 h-10 w-full rounded border"
                   aria-label="線の色の選択"
@@ -197,7 +195,7 @@ export function PropertiesPanel({
                   id="path-stroke-width"
                   value={selectedPath.strokeWidth}
                   onChange={(value) =>
-                    updatePath(selectedPath.id, {
+                    svgEditorActions.updatePath(selectedPath.id, {
                       strokeWidth: value || 0,
                     })
                   }

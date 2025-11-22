@@ -2,7 +2,7 @@
 
 import { useKeyboardShortcut } from "@/app/hooks/use-keyboard-shortcut";
 import { useScrollIntoView } from "@/app/hooks/use-scroll-into-view";
-import { useSvgEditorContext } from "../contexts/svg-editor-context";
+import { svgEditorActions, useSvgEditorSnapshot } from "../store";
 import type { PathElement } from "../svg-editor";
 import {
   Panel,
@@ -21,11 +21,13 @@ export function PathListPanel({
   headingLevel = "h2",
   ...props
 }: PathListPanelProps) {
-  const { svgData, selectedPathId, setSelectedPathId } = useSvgEditorContext();
+  const snapshot = useSvgEditorSnapshot();
+  const svgData = snapshot.history.present;
+  const selectedPathId = snapshot.selectedPathId;
   const selectedItemRef = useScrollIntoView<HTMLDivElement>(selectedPathId);
 
   const handlePathClick = (pathId: string) => {
-    setSelectedPathId(pathId);
+    svgEditorActions.setSelectedPathId(pathId);
   };
 
   const getPathPreview = (path: PathElement) => {
@@ -45,12 +47,12 @@ export function PathListPanel({
 
     if (currentIndex === -1) {
       // 何も選択されていない場合は最初のパスを選択
-      setSelectedPathId(svgData.paths[0].id);
+      svgEditorActions.setSelectedPathId(svgData.paths[0].id);
     } else if (currentIndex === svgData.paths.length - 1) {
       // 末尾の場合は先頭に戻る
-      setSelectedPathId(svgData.paths[0].id);
+      svgEditorActions.setSelectedPathId(svgData.paths[0].id);
     } else {
-      setSelectedPathId(svgData.paths[currentIndex + 1].id);
+      svgEditorActions.setSelectedPathId(svgData.paths[currentIndex + 1].id);
     }
   });
 
@@ -64,12 +66,12 @@ export function PathListPanel({
 
     if (currentIndex === -1) {
       // 何も選択されていない場合は最後のパスを選択
-      setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
+      svgEditorActions.setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
     } else if (currentIndex === 0) {
       // 先頭の場合は末尾に移動
-      setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
+      svgEditorActions.setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
     } else {
-      setSelectedPathId(svgData.paths[currentIndex - 1].id);
+      svgEditorActions.setSelectedPathId(svgData.paths[currentIndex - 1].id);
     }
   });
 

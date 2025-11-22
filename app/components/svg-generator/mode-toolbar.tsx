@@ -1,19 +1,19 @@
 "use client";
 
 import { ButtonGroup, ButtonGroupItem } from "@/app/components/ui";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { svgEditorActions, useSvgEditorSnapshot } from "./store";
 
 export type ModeToolbarProps = React.ComponentProps<"div">;
 
 export function ModeToolbar(props: ModeToolbarProps) {
-  const { isCropMode, toggleCropMode } = useSvgEditorContext();
+  const { isCropMode } = useSvgEditorSnapshot();
 
   return (
     <div {...props}>
       <ButtonGroup>
         {/* カーソルモード */}
         <ButtonGroupItem
-          onClick={() => isCropMode && toggleCropMode()}
+          onClick={() => isCropMode && svgEditorActions.toggleCropMode()}
           active={!isCropMode}
           aria-label="カーソルモード"
           title="カーソルモード (V)"
@@ -32,7 +32,7 @@ export function ModeToolbar(props: ModeToolbarProps) {
 
         {/* クロップモード */}
         <ButtonGroupItem
-          onClick={() => !isCropMode && toggleCropMode()}
+          onClick={() => !isCropMode && svgEditorActions.toggleCropMode()}
           active={isCropMode}
           aria-label="クロップモード"
           title="クロップモード (C)"

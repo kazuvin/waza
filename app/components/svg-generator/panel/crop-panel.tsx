@@ -1,7 +1,7 @@
 "use client";
 
 import { NumberInput } from "@/app/components/ui";
-import { useSvgEditorContext } from "../contexts/svg-editor-context";
+import { svgEditorActions, useSvgEditorSnapshot } from "../store";
 import {
   Panel,
   PanelProps,
@@ -18,15 +18,8 @@ type CropPanelProps = {
 } & PanelProps;
 
 export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
-  const {
-    originalViewBox,
-    cropRect,
-    lockAspectRatio,
-    setCropRect,
-    applyCrop,
-    toggleCropMode,
-    setLockAspectRatio,
-  } = useSvgEditorContext();
+  const { originalViewBox, cropRect, lockAspectRatio } =
+    useSvgEditorSnapshot();
 
   // 元のviewBoxのサイズを取得
   const originalParts = originalViewBox.split(" ").map(Number);
@@ -47,7 +40,7 @@ export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
       if (field === "width") {
         const newWidth = Math.max(10, value);
         const newHeight = newWidth / aspectRatio;
-        setCropRect({
+        svgEditorActions.setCropRect({
           ...cropRect,
           width: newWidth,
           height: newHeight,
@@ -55,14 +48,14 @@ export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
       } else {
         const newHeight = Math.max(10, value);
         const newWidth = newHeight * aspectRatio;
-        setCropRect({
+        svgEditorActions.setCropRect({
           ...cropRect,
           width: newWidth,
           height: newHeight,
         });
       }
     } else {
-      setCropRect({
+      svgEditorActions.setCropRect({
         ...cropRect,
         [field]: value,
       });
@@ -74,12 +67,12 @@ export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
     if (!cropRect) return;
 
     const size = Math.min(cropRect.width, cropRect.height);
-    setCropRect({
+    svgEditorActions.setCropRect({
       ...cropRect,
       width: size,
       height: size,
     });
-    setLockAspectRatio(true);
+    svgEditorActions.setLockAspectRatio(true);
   };
 
   return (
@@ -111,7 +104,7 @@ export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
                 type="checkbox"
                 id="lock-aspect-ratio"
                 checked={lockAspectRatio}
-                onChange={(e) => setLockAspectRatio(e.target.checked)}
+                onChange={(e) => svgEditorActions.setLockAspectRatio(e.target.checked)}
                 className="h-4 w-4 rounded border-gray-300"
               />
               <label
@@ -219,7 +212,7 @@ export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
         <div className="space-y-2">
           <Button
             type="button"
-            onClick={applyCrop}
+            onClick={() => svgEditorActions.applyCrop()}
             disabled={!cropRect}
             variant="default"
             className="w-full"
@@ -228,7 +221,7 @@ export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
           </Button>
           <Button
             type="button"
-            onClick={toggleCropMode}
+            onClick={() => svgEditorActions.toggleCropMode()}
             variant="outline"
             className="w-full"
           >

@@ -1,22 +1,20 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { svgEditorActions, useSvgEditorSnapshot } from "./store";
 import { usePinchZoom } from "./hooks/use-pinch-zoom";
 
 export function SvgCanvas() {
+  const snapshot = useSvgEditorSnapshot();
+  const svgData = snapshot.history.present;
   const {
-    svgData,
     selectedPathId,
     isCropMode,
     cropRect,
     originalViewBox,
     lockAspectRatio,
     zoom,
-    setSelectedPathId,
-    zoomTo,
-    setCropRect,
-  } = useSvgEditorContext();
+  } = snapshot;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -37,7 +35,7 @@ export function SvgCanvas() {
 
   const containerRef = usePinchZoom({
     currentZoom: zoom,
-    onZoomChange: zoomTo,
+    onZoomChange: svgEditorActions.zoomTo,
   });
 
   // SVG座標系への変換
@@ -85,7 +83,7 @@ export function SvgCanvas() {
     setDragStart(coords);
     setIsDragging(true);
     setResizeHandle(null);
-    setCropRect(null);
+    svgEditorActions.setCropRect(null);
   };
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
@@ -98,7 +96,7 @@ export function SvgCanvas() {
       const dx = coords.x - dragStart.x;
       const dy = coords.y - dragStart.y;
 
-      setCropRect({
+      svgEditorActions.setCropRect({
         x: initialCropRect.x + dx,
         y: initialCropRect.y + dy,
         width: initialCropRect.width,
@@ -207,7 +205,7 @@ export function SvgCanvas() {
         }
       }
 
-      setCropRect(newRect);
+      svgEditorActions.setCropRect(newRect);
     } else {
       // 新規作成の場合
       const x = Math.min(dragStart.x, coords.x);
@@ -215,7 +213,7 @@ export function SvgCanvas() {
       const width = Math.abs(coords.x - dragStart.x);
       const height = Math.abs(coords.y - dragStart.y);
 
-      setCropRect({ x, y, width, height });
+      svgEditorActions.setCropRect({ x, y, width, height });
     }
   };
 
@@ -259,7 +257,7 @@ export function SvgCanvas() {
           }}
           role="img"
           aria-label="SVGキャンバス"
-          onClick={() => !isCropMode && setSelectedPathId(null)}
+          onClick={() => !isCropMode && svgEditorActions.setSelectedPathId(null)}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -284,7 +282,7 @@ export function SvgCanvas() {
                 onClick={(e: React.MouseEvent) => {
                   if (!isCropMode) {
                     e.stopPropagation();
-                    setSelectedPathId(path.id);
+                    svgEditorActions.setSelectedPathId(path.id);
                   }
                 }}
                 tabIndex={0}
