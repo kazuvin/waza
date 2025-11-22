@@ -31,10 +31,8 @@ type SvgEditorState = {
   lockAspectRatio: boolean;
 };
 
-// 初期データ
 const initialData = parseSvgCode("");
 
-// ストア
 export const svgEditorStore = proxy<SvgEditorState>({
   history: createInitialHistory(initialData),
   originalViewBox: initialData.viewBox,
@@ -81,7 +79,9 @@ export const svgEditorActions = {
     svgEditorStore.history = addHistory(svgEditorStore.history, newState);
   },
 
-  updateCanvas(updates: Partial<Pick<SvgData, "width" | "height" | "viewBox">>) {
+  updateCanvas(
+    updates: Partial<Pick<SvgData, "width" | "height" | "viewBox">>
+  ) {
     const newState: SvgData = {
       ...svgEditorStore.history.present,
       ...updates,
@@ -149,7 +149,8 @@ export const svgEditorActions = {
       svgEditorStore.selectedPathId = null;
 
       if (
-        svgEditorStore.history.present.viewBox !== svgEditorStore.originalViewBox
+        svgEditorStore.history.present.viewBox !==
+        svgEditorStore.originalViewBox
       ) {
         const viewBoxParts = svgEditorStore.history.present.viewBox
           .split(" ")
