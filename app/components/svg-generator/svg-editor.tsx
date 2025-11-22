@@ -38,9 +38,8 @@ const sampleSvg = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="
 </svg>`;
 
 import { EditorToolbar } from "./editor-toolbar";
-import { PathList } from "./path-list";
-import { PropertiesPanel } from "./properties-panel";
-import { CropPanel } from "./crop-panel";
+import { PathListPanel } from "./path-list-panel";
+import { RightPanel } from "./right-panel";
 import { SvgCanvas } from "./svg-canvas";
 import { ModeToolbar } from "./mode-toolbar";
 import { ZoomToolbar } from "./zoom-toolbar";
@@ -85,7 +84,7 @@ export function SvgEditor({
 }
 
 function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
-  const { svgData, isCropMode } = useSvgEditorContext();
+  const { svgData } = useSvgEditorContext();
 
   const handleSave = () => {
     const svgCode = generateSvgCode(svgData);
@@ -108,21 +107,21 @@ function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
           <ZoomToolbar className="absolute right-4 bottom-4 z-10" />
         </main>
 
-        <aside
+        <PathListPanel
+          as="aside"
+          headingLevel="h2"
           className="absolute top-4 left-4 h-full w-64"
           role="complementary"
           aria-label="パス一覧"
-        >
-          <PathList />
-        </aside>
+        />
 
-        <aside
-          className="absolute top-4 right-4 h-full w-80"
+        <RightPanel
+          as="aside"
+          headingLevel="h2"
+          className="absolute top-4 right-4 h-5/6 w-80"
           role="complementary"
-          aria-label={isCropMode ? "クロップ設定" : "プロパティパネル"}
-        >
-          {isCropMode ? <CropPanel /> : <PropertiesPanel />}
-        </aside>
+          aria-label="プロパティパネル"
+        />
       </div>
     </div>
   );

@@ -4,11 +4,23 @@ import { useKeyboardShortcut } from "@/app/hooks/use-keyboard-shortcut";
 import { useScrollIntoView } from "@/app/hooks/use-scroll-into-view";
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
 import type { PathElement } from "./svg-editor";
-import { cn } from "@/lib/cn";
+import {
+  Panel,
+  PanelProps,
+  PanelHeader,
+  PanelTitle,
+  PanelTitleProps,
+  PanelContent,
+} from "./panel";
 
-export type PathListProps = React.ComponentProps<"div">;
+export type PathListPanelProps = {
+  headingLevel?: PanelTitleProps["as"];
+} & PanelProps;
 
-export function PathList({ className, ...props }: PathListProps) {
+export function PathListPanel({
+  headingLevel = "h2",
+  ...props
+}: PathListPanelProps) {
   const { svgData, selectedPathId, setSelectedPathId } = useSvgEditorContext();
   const selectedItemRef = useScrollIntoView<HTMLDivElement>(selectedPathId);
 
@@ -62,22 +74,13 @@ export function PathList({ className, ...props }: PathListProps) {
   });
 
   return (
-    <div
-      className={cn(
-        "bg-card/80 rounded-2xl border border-white backdrop-blur-2xl",
-        className
-      )}
-      {...props}
-    >
-      <div className="border-border border-b p-3">
-        <h2 className="text-sm font-semibold">パス一覧</h2>
+    <Panel {...props}>
+      <PanelHeader>
+        <PanelTitle as={headingLevel}>パス一覧</PanelTitle>
         <p className="text-xs text-gray-500">{svgData.paths.length}個のパス</p>
-      </div>
+      </PanelHeader>
 
-      <div
-        className="overflow-y-auto"
-        style={{ maxHeight: "calc(100vh - 240px)" }}
-      >
+      <PanelContent>
         {svgData.paths.map((path, index) => {
           const isSelected = selectedPathId === path.id;
           return (
@@ -128,13 +131,13 @@ export function PathList({ className, ...props }: PathListProps) {
             </div>
           );
         })}
-      </div>
 
-      {svgData.paths.length === 0 && (
-        <div className="flex h-32 items-center justify-center text-sm text-gray-400">
-          パスがありません
-        </div>
-      )}
-    </div>
+        {svgData.paths.length === 0 && (
+          <div className="flex h-32 items-center justify-center text-sm text-gray-400">
+            パスがありません
+          </div>
+        )}
+      </PanelContent>
+    </Panel>
   );
 }

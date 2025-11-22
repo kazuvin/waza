@@ -2,10 +2,22 @@
 
 import { NumberInput } from "@/app/components/ui";
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
-import { RightPanel } from "./right-panel";
+import {
+  Panel,
+  PanelProps,
+  PanelHeader,
+  PanelTitle,
+  PanelTitleProps,
+  PanelContent,
+  PanelFooter,
+} from "./panel";
 import { Button } from "@/app/components/ui/button/button";
 
-export function CropPanel() {
+type CropPanelProps = {
+  headingLevel?: PanelTitleProps["as"];
+} & PanelProps;
+
+export function CropPanel({ headingLevel = "h2", ...props }: CropPanelProps) {
   const {
     originalViewBox,
     cropRect,
@@ -71,31 +83,11 @@ export function CropPanel() {
   };
 
   return (
-    <RightPanel
-      title="クロップ設定"
-      footer={
-        <div className="space-y-2">
-          <Button
-            type="button"
-            onClick={applyCrop}
-            disabled={!cropRect}
-            variant="default"
-            className="w-full"
-          >
-            適用
-          </Button>
-          <Button
-            type="button"
-            onClick={toggleCropMode}
-            variant="outline"
-            className="w-full"
-          >
-            キャンセル
-          </Button>
-        </div>
-      }
-    >
-      <div className="space-y-6 py-3">
+    <Panel {...props}>
+      <PanelHeader>
+        <PanelTitle as={headingLevel}>クロップ設定</PanelTitle>
+      </PanelHeader>
+      <PanelContent className="space-y-6 p-3">
         {/* サイズ情報 */}
         <div className="rounded-lg bg-gray-50 p-3">
           <div className="mb-2 text-xs font-medium text-gray-600">
@@ -221,7 +213,29 @@ export function CropPanel() {
             <li>テキスト入力で微調整</li>
           </ul>
         </div>
-      </div>
-    </RightPanel>
+      </PanelContent>
+
+      <PanelFooter>
+        <div className="space-y-2">
+          <Button
+            type="button"
+            onClick={applyCrop}
+            disabled={!cropRect}
+            variant="default"
+            className="w-full"
+          >
+            適用
+          </Button>
+          <Button
+            type="button"
+            onClick={toggleCropMode}
+            variant="outline"
+            className="w-full"
+          >
+            キャンセル
+          </Button>
+        </div>
+      </PanelFooter>
+    </Panel>
   );
 }
