@@ -1,12 +1,8 @@
 "use client";
 
 import { useKeyboardShortcut } from "@/app/hooks/use-keyboard-shortcut";
-import {
-  svgEditorActions,
-  useSvgEditorSnapshot,
-  getCanUndo,
-  getCanRedo,
-} from "./store";
+import { useSvgEditorSnapshot, getCanUndo, getCanRedo } from "./store";
+import { deletePath, undoAction, redoAction, toggleCropMode } from "./actions";
 
 export function KeyboardShortcuts() {
   const { selectedPathId, isCropMode } = useSvgEditorSnapshot();
@@ -21,7 +17,7 @@ export function KeyboardShortcuts() {
     },
     () => {
       if (selectedPathId) {
-        svgEditorActions.deletePath(selectedPathId);
+        deletePath(selectedPathId);
       }
     }
   );
@@ -34,7 +30,7 @@ export function KeyboardShortcuts() {
     },
     () => {
       if (selectedPathId) {
-        svgEditorActions.deletePath(selectedPathId);
+        deletePath(selectedPathId);
       }
     }
   );
@@ -48,7 +44,7 @@ export function KeyboardShortcuts() {
       enabled: canUndo,
     },
     () => {
-      svgEditorActions.undo();
+      undoAction();
     }
   );
 
@@ -62,7 +58,7 @@ export function KeyboardShortcuts() {
       enabled: canRedo,
     },
     () => {
-      svgEditorActions.redo();
+      redoAction();
     }
   );
 
@@ -75,7 +71,7 @@ export function KeyboardShortcuts() {
       enabled: canRedo,
     },
     () => {
-      svgEditorActions.redo();
+      redoAction();
     }
   );
 
@@ -86,7 +82,7 @@ export function KeyboardShortcuts() {
       enabled: isCropMode,
     },
     () => {
-      svgEditorActions.toggleCropMode();
+      toggleCropMode();
     }
   );
 
@@ -97,7 +93,7 @@ export function KeyboardShortcuts() {
       enabled: !isCropMode,
     },
     () => {
-      svgEditorActions.toggleCropMode();
+      toggleCropMode();
     }
   );
 

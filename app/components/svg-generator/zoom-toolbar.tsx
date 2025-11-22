@@ -2,7 +2,8 @@
 
 import { ButtonGroup } from "@/app/components/ui/button-group/button-group";
 import { ButtonGroupItem } from "@/app/components/ui/button-group/button-group-item";
-import { svgEditorActions, useSvgEditorSnapshot } from "./store";
+import { useSvgEditorSnapshot } from "./store";
+import { zoomIn, zoomOut } from "./actions";
 
 export type ZoomToolbarProps = React.ComponentProps<"div">;
 
@@ -15,7 +16,7 @@ export function ZoomToolbar(props: ZoomToolbarProps) {
     <div {...props}>
       <ButtonGroup>
         <ButtonGroupItem
-          onClick={() => svgEditorActions.zoomOut()}
+          onClick={() => zoomOut()}
           aria-label="ズームアウト"
           title="ズームアウト"
         >
@@ -25,7 +26,7 @@ export function ZoomToolbar(props: ZoomToolbarProps) {
           {zoomPercent}
         </ButtonGroupItem>
         <ButtonGroupItem
-          onClick={() => svgEditorActions.zoomIn()}
+          onClick={() => zoomIn()}
           aria-label="ズームイン"
           title="ズームイン"
         >

@@ -2,7 +2,8 @@
 
 import { useKeyboardShortcut } from "@/app/hooks/use-keyboard-shortcut";
 import { useScrollIntoView } from "@/app/hooks/use-scroll-into-view";
-import { svgEditorActions, useSvgEditorSnapshot } from "../store";
+import { useSvgEditorSnapshot } from "../store";
+import { setSelectedPathId } from "../actions";
 import type { PathElement } from "../svg-editor";
 import {
   Panel,
@@ -27,7 +28,7 @@ export function PathListPanel({
   const selectedItemRef = useScrollIntoView<HTMLDivElement>(selectedPathId);
 
   const handlePathClick = (pathId: string) => {
-    svgEditorActions.setSelectedPathId(pathId);
+    setSelectedPathId(pathId);
   };
 
   const getPathPreview = (path: PathElement) => {
@@ -47,12 +48,12 @@ export function PathListPanel({
 
     if (currentIndex === -1) {
       // 何も選択されていない場合は最初のパスを選択
-      svgEditorActions.setSelectedPathId(svgData.paths[0].id);
+      setSelectedPathId(svgData.paths[0].id);
     } else if (currentIndex === svgData.paths.length - 1) {
       // 末尾の場合は先頭に戻る
-      svgEditorActions.setSelectedPathId(svgData.paths[0].id);
+      setSelectedPathId(svgData.paths[0].id);
     } else {
-      svgEditorActions.setSelectedPathId(svgData.paths[currentIndex + 1].id);
+      setSelectedPathId(svgData.paths[currentIndex + 1].id);
     }
   });
 
@@ -66,12 +67,12 @@ export function PathListPanel({
 
     if (currentIndex === -1) {
       // 何も選択されていない場合は最後のパスを選択
-      svgEditorActions.setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
+      setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
     } else if (currentIndex === 0) {
       // 先頭の場合は末尾に移動
-      svgEditorActions.setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
+      setSelectedPathId(svgData.paths[svgData.paths.length - 1].id);
     } else {
-      svgEditorActions.setSelectedPathId(svgData.paths[currentIndex - 1].id);
+      setSelectedPathId(svgData.paths[currentIndex - 1].id);
     }
   });
 

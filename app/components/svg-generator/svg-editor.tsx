@@ -43,9 +43,8 @@ import { SvgCanvas } from "./svg-canvas";
 import { ModeToolbar } from "./mode-toolbar";
 import { ZoomToolbar } from "./zoom-toolbar";
 import { HistoryToolbar } from "./history-toolbar";
-import { svgEditorActions, useSvgEditorSnapshot } from "./store";
+import { initialize } from "./actions";
 import { KeyboardShortcuts } from "./keyboard-shortcuts";
-import { generateSvgCode } from "./utils/svg-parser";
 
 export type PathElement = {
   id: string;
@@ -62,40 +61,14 @@ export type SvgData = {
   paths: PathElement[];
 };
 
-type SvgEditorProps = {
-  id: string;
-  initialSvgCode?: string;
-  onSave?: (svgCode: string) => void;
-};
-
-export function SvgEditor({
-  id,
-  initialSvgCode = sampleSvg,
-  onSave,
-}: SvgEditorProps) {
+export function SvgEditor() {
   // ストアを初期化
-  svgEditorActions.initialize(initialSvgCode);
-
-  return (
-    <>
-      <KeyboardShortcuts />
-      <SvgEditorContent onSave={onSave} />
-    </>
-  );
-}
-
-function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
-  const snapshot = useSvgEditorSnapshot();
-  const svgData = snapshot.history.present;
-
-  const handleSave = () => {
-    const svgCode = generateSvgCode(svgData as SvgData);
-    onSave?.(svgCode);
-  };
+  initialize(sampleSvg);
 
   return (
     <div className="flex h-screen flex-col">
-      <EditorToolbar onSave={handleSave} />
+      <KeyboardShortcuts />
+      <EditorToolbar onSave={() => undefined} />
 
       <div className="relative flex-1 overflow-hidden">
         <main
