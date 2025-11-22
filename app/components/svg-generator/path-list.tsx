@@ -4,8 +4,11 @@ import { useKeyboardShortcut } from "@/app/hooks/use-keyboard-shortcut";
 import { useScrollIntoView } from "@/app/hooks/use-scroll-into-view";
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
 import type { PathElement } from "./svg-editor";
+import { cn } from "@/lib/cn";
 
-export function PathList() {
+export type PathListProps = React.ComponentProps<"div">;
+
+export function PathList({ className, ...props }: PathListProps) {
   const { svgData, selectedPathId, setSelectedPathId } = useSvgEditorContext();
   const selectedItemRef = useScrollIntoView<HTMLDivElement>(selectedPathId);
 
@@ -59,7 +62,13 @@ export function PathList() {
   });
 
   return (
-    <div className="bg-card/80 rounded-2xl border border-white backdrop-blur-2xl">
+    <div
+      className={cn(
+        "bg-card/80 rounded-2xl border border-white backdrop-blur-2xl",
+        className
+      )}
+      {...props}
+    >
       <div className="border-border border-b p-3">
         <h2 className="text-sm font-semibold">パス一覧</h2>
         <p className="text-xs text-gray-500">{svgData.paths.length}個のパス</p>

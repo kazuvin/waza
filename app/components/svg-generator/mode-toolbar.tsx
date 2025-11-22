@@ -3,11 +3,13 @@
 import { ButtonGroup, ButtonGroupItem } from "@/app/components/ui";
 import { useSvgEditorContext } from "./contexts/svg-editor-context";
 
-export function ModeToolbar() {
+export type ModeToolbarProps = React.ComponentProps<"div">;
+
+export function ModeToolbar(props: ModeToolbarProps) {
   const { isCropMode, toggleCropMode } = useSvgEditorContext();
 
   return (
-    <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
+    <div {...props}>
       <ButtonGroup>
         {/* カーソルモード */}
         <ButtonGroupItem

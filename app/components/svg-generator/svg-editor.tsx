@@ -43,6 +43,8 @@ import { PropertiesPanel } from "./properties-panel";
 import { CropPanel } from "./crop-panel";
 import { SvgCanvas } from "./svg-canvas";
 import { ModeToolbar } from "./mode-toolbar";
+import { ZoomToolbar } from "./zoom-toolbar";
+import { HistoryToolbar } from "./history-toolbar";
 import {
   SvgEditorProvider,
   useSvgEditorContext,
@@ -101,11 +103,13 @@ function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
           className="h-full overflow-auto"
         >
           <SvgCanvas />
-          <ModeToolbar />
+          <ModeToolbar className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2" />
+          <HistoryToolbar className="absolute bottom-4 left-4 z-10" />
+          <ZoomToolbar className="absolute right-4 bottom-4 z-10" />
         </main>
 
         <aside
-          className="absolute top-2 left-2 h-full w-64"
+          className="absolute top-4 left-4 h-full w-64"
           role="complementary"
           aria-label="パス一覧"
         >
@@ -113,7 +117,7 @@ function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
         </aside>
 
         <aside
-          className="absolute top-2 right-2 h-full w-80"
+          className="absolute top-4 right-4 h-full w-80"
           role="complementary"
           aria-label={isCropMode ? "クロップ設定" : "プロパティパネル"}
         >
