@@ -2,27 +2,29 @@
 
 import { ButtonGroup } from "@/app/components/ui/button-group/button-group";
 import { ButtonGroupItem } from "@/app/components/ui/button-group/button-group-item";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { getCanUndo, getCanRedo } from "./store";
+import { undoAction, redoAction } from "./actions";
 
 export type HistoryToolbarProps = React.ComponentProps<"div">;
 
 export function HistoryToolbar(props: HistoryToolbarProps) {
-  const { canUndo, canRedo, isCropMode, undo, redo } = useSvgEditorContext();
+  const canUndo = getCanUndo();
+  const canRedo = getCanRedo();
 
   return (
     <div {...props}>
       <ButtonGroup>
         <ButtonGroupItem
-          onClick={undo}
-          disabled={!canUndo || isCropMode}
+          onClick={() => undoAction()}
+          disabled={!canUndo}
           aria-label="元に戻す (Cmd+Z)"
           title="元に戻す (Cmd+Z)"
         >
           ↶
         </ButtonGroupItem>
         <ButtonGroupItem
-          onClick={redo}
-          disabled={!canRedo || isCropMode}
+          onClick={() => redoAction()}
+          disabled={!canRedo}
           aria-label="やり直し (Cmd+Shift+Z)"
           title="やり直し (Cmd+Shift+Z)"
         >

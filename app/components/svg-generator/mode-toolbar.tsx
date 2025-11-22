@@ -1,12 +1,13 @@
 "use client";
 
 import { ButtonGroup, ButtonGroupItem } from "@/app/components/ui";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { useSvgEditorSnapshot } from "./store";
+import { toggleCropMode } from "./actions";
 
 export type ModeToolbarProps = React.ComponentProps<"div">;
 
 export function ModeToolbar(props: ModeToolbarProps) {
-  const { isCropMode, toggleCropMode } = useSvgEditorContext();
+  const { isCropMode } = useSvgEditorSnapshot();
 
   return (
     <div {...props}>

@@ -1,22 +1,21 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
-import { usePinchZoom } from "./hooks/use-pinch-zoom";
+import { useSvgEditorSnapshot } from "./store";
+import { setCropRect, setSelectedPathId, zoomTo } from "./actions";
+import { usePinchZoom } from "./hooks";
 
 export function SvgCanvas() {
+  const snapshot = useSvgEditorSnapshot();
+  const svgData = snapshot.history.present;
   const {
-    svgData,
     selectedPathId,
     isCropMode,
     cropRect,
     originalViewBox,
     lockAspectRatio,
     zoom,
-    setSelectedPathId,
-    zoomTo,
-    setCropRect,
-  } = useSvgEditorContext();
+  } = snapshot;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const [isDragging, setIsDragging] = useState(false);

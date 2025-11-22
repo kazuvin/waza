@@ -11,7 +11,10 @@ export type HistoryState<T> = {
 /**
  * 新しい状態を履歴に追加
  */
-export function addHistory<T>(history: HistoryState<T>, newState: T): HistoryState<T> {
+export function addHistory<T>(
+  history: HistoryState<T>,
+  newState: T
+): HistoryState<T> {
   return {
     past: [...history.past, history.present],
     present: newState,
