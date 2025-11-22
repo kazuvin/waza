@@ -2,8 +2,8 @@
 
 import { useKeyboardShortcut } from "@/app/hooks/use-keyboard-shortcut";
 import { useScrollIntoView } from "@/app/hooks/use-scroll-into-view";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
-import type { PathElement } from "./svg-editor";
+import { useSvgEditorContext } from "../contexts/svg-editor-context";
+import type { PathElement } from "../svg-editor";
 import {
   Panel,
   PanelProps,
@@ -11,7 +11,7 @@ import {
   PanelTitle,
   PanelTitleProps,
   PanelContent,
-} from "./panel";
+} from ".";
 
 export type PathListPanelProps = {
   headingLevel?: PanelTitleProps["as"];

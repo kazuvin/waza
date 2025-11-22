@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, NumberInput, Textarea } from "@/app/components/ui";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { useSvgEditorContext } from "../contexts/svg-editor-context";
 import {
   Panel,
   PanelProps,
@@ -9,7 +9,7 @@ import {
   PanelTitle,
   PanelTitleProps,
   PanelContent,
-} from "./panel";
+} from ".";
 
 type PropertiesPanelProps = {
   headingLevel?: PanelTitleProps["as"];

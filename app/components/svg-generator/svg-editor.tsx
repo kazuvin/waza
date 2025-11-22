@@ -38,8 +38,7 @@ const sampleSvg = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="
 </svg>`;
 
 import { EditorToolbar } from "./editor-toolbar";
-import { PathListPanel } from "./path-list-panel";
-import { RightPanel } from "./right-panel";
+import { PathListPanel, RightPanel } from "./panel";
 import { SvgCanvas } from "./svg-canvas";
 import { ModeToolbar } from "./mode-toolbar";
 import { ZoomToolbar } from "./zoom-toolbar";
@@ -110,7 +109,7 @@ function SvgEditorContent({ onSave }: { onSave?: (svgCode: string) => void }) {
         <PathListPanel
           as="aside"
           headingLevel="h2"
-          className="absolute top-4 left-4 h-full w-64"
+          className="absolute top-4 left-4 h-5/6 w-64"
           role="complementary"
           aria-label="パス一覧"
         />

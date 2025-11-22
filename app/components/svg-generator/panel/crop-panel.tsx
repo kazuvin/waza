@@ -1,7 +1,7 @@
 "use client";
 
 import { NumberInput } from "@/app/components/ui";
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { useSvgEditorContext } from "../contexts/svg-editor-context";
 import {
   Panel,
   PanelProps,
@@ -10,7 +10,7 @@ import {
   PanelTitleProps,
   PanelContent,
   PanelFooter,
-} from "./panel";
+} from ".";
 import { Button } from "@/app/components/ui/button/button";
 
 type CropPanelProps = {

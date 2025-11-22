@@ -1,9 +1,9 @@
 "use client";
 
-import { useSvgEditorContext } from "./contexts/svg-editor-context";
+import { useSvgEditorContext } from "../contexts/svg-editor-context";
 import { CropPanel } from "./crop-panel";
 import { PropertiesPanel } from "./properties-panel";
-import { PanelProps, PanelTitleProps } from "./panel";
+import { PanelProps, PanelTitleProps } from ".";
 
 type RightPanelProps = {
   headingLevel?: PanelTitleProps["as"];
